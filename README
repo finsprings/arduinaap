@@ -1,3 +1,5 @@
 ArduinAAP (Arduino Apple Accessory Protocol) provides the iPodSerial Arduino library.
 This library lets an Arduino interact with an iPod via the serial AAP protocol through the iPod's
 dock connector.
+
+See http://nuxx.net/wiki/Apple_Accessory_Protocol for more details of AAP.
