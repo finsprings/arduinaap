@@ -1,4 +1,11 @@
 // Example of Advanced Remote (Mode 4) getting back current track position information
+//
+// WARNING:
+// Note that this example will leave your iPod in Advanced Mode, which puts your
+// iPod's screen into "OK to disconnect" mode. It should come back out of that
+// mode after a few seconds, but if not you can power it off and back on,
+// or send it a command to go back into Simple Remote mode.
+
 #include "iPodSerial.h"
 
 #if !defined(__AVR_ATmega1280__)
