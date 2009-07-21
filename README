@@ -3,3 +3,8 @@ This library lets an Arduino interact with an iPod via the serial AAP protocol t
 dock connector.
 
 See http://nuxx.net/wiki/Apple_Accessory_Protocol for more details of AAP.
+
+The library sends command via serial to the iPod and listens for responses. If and when responses come back over serial form the iPod, the library parses them and passes to data to callback functions provided by the user of the library. Thus responses are received asynchronously, and so the calling code is not blocked waiting for the iPod to respond, so it can continue to blink lights, scroll a display, or whatever.
+
+If you have an Arduino Mega you can take advantage of it having multiple serial ports to enable debugging messages out one serial port and communicaton with the iPod on another. The libary provides setup functions to let you do this.
+
