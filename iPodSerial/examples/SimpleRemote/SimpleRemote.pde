@@ -14,8 +14,6 @@ iPodSerial is;
 void setup()
 {
     pinMode(BUTTON, INPUT);
-
-    Serial.begin(9600);
     is.setup();
 }
 
