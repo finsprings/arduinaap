@@ -7,7 +7,7 @@ See http://nuxx.net/wiki/Apple_Accessory_Protocol for more details of AAP.
 
 The library sends commands via serial to the iPod and listens for responses. If and when responses come back over serial from the iPod, the library parses them and passes the data to callback functions provided by the user of the library. Responses are received asynchronously, and so the calling code is not blocked waiting for the iPod to respond; therefore it can continue to blink lights, scroll a display, poll buttons, or whatever.
 
-If you have an Arduino Mega you can take advantage of its multiple serial ports to have debugging messages out one serial port and communication with the iPod on another. The library provides setup functions to let you do this.
+If you have an Arduino Mega you can take advantage of its multiple serial ports to have debugging messages out one serial port and communication with the iPod on another. The library provides setup functions to let you do this. You could probably also use SoftwareSerial for this on non-Mega Arduinos.
 
 NOTE: When connecting your iPod to your Arduino, please double-check your wiring. iPods are expensive and you don't want to break yours by sending it too high a voltage or whatever. You use this library at your own risk etc.
 
