@@ -96,7 +96,8 @@ public:
     void setTimeAndStatusHandler(TimeAndStatusHandler newTimeAndStatusHandler);
 
     /**
-     * Type of the callback that can receive the position in the current track.
+     * Type of the callback that can receive the current position in the
+     * current playlist.
      * If you call this function myCurrentPositionHandler your function
      * definition might look like:
      *
@@ -105,7 +106,7 @@ public:
      *   // do something with the position information we just got
      * }
      *
-     * position is the number of milliseconds into the current track
+     * position is the index of the currently-playing track in the current playlist
      */
     typedef void CurrentPositionHandler(unsigned long position);
     
