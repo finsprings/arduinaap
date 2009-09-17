@@ -9,3 +9,6 @@ The library sends commands via serial to the iPod and listens for responses. If 
 
 If you have an Arduino Mega you can take advantage of its multiple serial ports to have debugging messages out one serial port and communication with the iPod on another. The library provides setup functions to let you do this.
 
+NOTE: When connecting your iPod to your Arduino, please double-check your wiring. iPods are expensive and you don't want to break yours by sending it too high a voltage or whatever. You use this library at your own risk etc.
+
+
