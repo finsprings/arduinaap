@@ -123,6 +123,26 @@ unsigned long AdvancedRemote::endianConvert(const byte *p)
         (((unsigned long) p[0]) << 24);
 }
 
+void AdvancedRemote::enable()
+{
+    if (pPrint)
+    {
+        pPrint->println("enabling advanced remote mode");
+    }
+
+    sendCommand(MODE_SWITCHING_MODE, 0x01, ADVANCED_REMOTE_MODE);
+}
+
+void AdvancedRemote::disable()
+{
+    if (pPrint)
+    {
+        pPrint->println("disabling advanced remote mode");
+    }
+
+    sendCommand(MODE_SWITCHING_MODE, 0x01, SIMPLE_REMOTE_MODE);
+}
+
 void AdvancedRemote::askForPos()
 {
     if (pPrint)
@@ -130,8 +150,6 @@ void AdvancedRemote::askForPos()
         pPrint->println("switch to adv");
     }
 
-    sendCommand(MODE_SWITCHING_MODE, 0x01, ADVANCED_REMOTE_MODE);
-    delay(250);
     sendCommandWithParam(ADVANCED_REMOTE_MODE, 0x00, 0x20, 1);
     delay(250);
     sendCommand(ADVANCED_REMOTE_MODE, 0x00, 0x1C);

@@ -43,8 +43,6 @@ public:
 
 
 private: // attributes
-    static const byte SIMPLE_REMOTE_MODE = 0x02;
-
     static const byte PLAY_CMD_1 = 0x00;
     static const byte PLAY_CMD_2 = 0x01;
 

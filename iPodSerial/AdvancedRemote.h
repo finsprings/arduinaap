@@ -137,6 +137,22 @@ public:
      */
     void askForPos();
 
+    /**
+     * Turn on Advanced Remote mode. This causes the iPod to
+     * show a check mark and "OK to disconnect" on its display.
+     * The iPod can only be controlled by the remote in this mode.
+     *
+     * You can reset the iPod (press and hold center+menu on the
+     * old click-wheel style, or top-button+front-button on iPhone
+     * or iPod Touch) if you end up with your iPod stuck in this mode.
+     */
+    void enable();
+
+    /**
+     * disabled Advanced Remote mode.
+     */
+    void disable();
+
 private: // attributes
     static const byte MODE_SWITCHING_MODE = 0x00;
     static const byte ADVANCED_REMOTE_MODE = 0x04;

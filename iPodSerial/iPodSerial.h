@@ -64,6 +64,10 @@ public:
     void setDebugPrint(Print &newDebugSerial);
 
 protected: // attributes
+    static const byte MODE_SWITCHING_MODE = 0x00;
+    static const byte SIMPLE_REMOTE_MODE = 0x02;
+    static const byte ADVANCED_REMOTE_MODE = 0x04;
+
     byte dataSize;
     byte dataBuffer[128];
     Print *pPrint;
