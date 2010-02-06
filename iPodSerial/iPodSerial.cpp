@@ -43,6 +43,7 @@ void iPodSerial::setSerial(HardwareSerial &newiPodSerial)
 void iPodSerial::setDebugPrint(Print &newPrint)
 {
     pPrint = &newPrint;
+    pPrint->println("Debug Print now set");
 }
 
 void iPodSerial::setup()
