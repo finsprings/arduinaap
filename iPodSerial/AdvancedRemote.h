@@ -154,8 +154,6 @@ public:
     void disable();
 
 private: // attributes
-    static const byte MODE_SWITCHING_MODE = 0x00;
-    static const byte ADVANCED_REMOTE_MODE = 0x04;
     static const byte CMD_SONG_TITLE = 0x20;
     static const byte CMD_TIME_AND_STATUS_INFO = 0x1C;
     static const byte CMD_CURRENT_POSITION = 0x1E;
