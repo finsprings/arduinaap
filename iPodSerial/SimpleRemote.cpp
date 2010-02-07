@@ -26,20 +26,12 @@
 
 void SimpleRemote::sendPlay()
 {
-    if (pPrint)
-    {
-        pPrint->println("Sending simple play");
-    }
-
+    log("Sending simple play");
     sendCommand(SIMPLE_REMOTE_MODE, PLAY_CMD_1, PLAY_CMD_2);
 }
 
 void SimpleRemote::sendRelease()
 {
-    if (pPrint)
-    {
-        pPrint->println("Sending simple release");
-    }
-
+    log("Sending simple release");
     sendCommand(SIMPLE_REMOTE_MODE, BUTTON_RELEASED_CMD_1, BUTTON_RELEASED_CMD_2);
 }
