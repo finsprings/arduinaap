@@ -7,33 +7,34 @@
  *    - Redistributions of source code must retain the above copyright notice,
  *      this list of conditions and the following disclaimer.
  *    - Redistributions in binary form must reproduce the above copyright
- **      notice, this list of conditions and the following disclaimer in the
- **      documentation and/or other materials provided with the distribution.
- **
- ** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- ** AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- ** ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- ** LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- ** CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- ** SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- ** INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- ** CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- ** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- ** POSSIBILITY OF SUCH DAMAGE.
- ********************************************************************************/
+ *      notice, this list of conditions and the following disclaimer in the
+ *      documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *******************************************************************************/
 
 // Example of Advanced Remote (Mode 4) getting back current track position information
 //
 // WARNING:
-// Note that this example will leave your iPod in Advanced Mode, which puts your
+// Note that this example could leave your iPod in Advanced Mode, which puts your
 // iPod's screen into "OK to disconnect" mode. It should come back out of that
 // mode after a few seconds, but if not you can power it off and back on,
 // or send it a command to go back into Simple Remote mode.
 
 #include <AdvancedRemote.h>
 
-// This sktech needs to be adapted to be used on a non-Mega, so check the board here so people notice.
+// This sketch needs to be adapted (change serial port config in setup())
+// to be used on a non-Mega, so check the board here so people notice.
 #if !defined(__AVR_ATmega1280__)
 #error "This example is for the Mega, because it uses one Serial3 for the iPod and Serial for debug msgs"
 #endif
@@ -48,18 +49,34 @@ const int BUTTON = 5;
 const long DEBOUNCE_MILLIS = 200;
 int lastButtonState = LOW;
 long lastToggleTime = 0;
+int buttonPressCount = 0;
 AdvancedRemote advancedRemote;
 bool remoteEnabled = false;
 
-// Function that will be called with the title of the current track
-// (in response to Mode 4 command 0x20)
-void songTitleHandler(const char *title)
+//
+// our handler (aka callback) implementations;
+// these are what get sent data back from the iPod
+// when we make requests of it.
+//
+void iPodNameHandler(const char *name)
 {
-  Serial.print("Title: ");
-  Serial.println(title);
+  Serial.print("iPod Name: ");
+  Serial.println(name);
 }
 
-// Helper function to display time nicely
+void itemCountHandler(unsigned long count)
+{
+  Serial.print("Item Count: ");
+  Serial.println(count);
+}
+
+void itemNameHandler(const char *name)
+{
+  Serial.print("Item Name: ");
+  Serial.println(name);
+}
+
+// helper function to display time 
 void printTime(const unsigned long ms)
 {
   unsigned long secs = ms / 1000;
@@ -72,9 +89,7 @@ void printTime(const unsigned long ms)
   Serial.println("s");
 }
 
-// Function that will be called with time and current status of the track
-// (in response to Mode 4 command 0x1C)
-void timeAndStatusHandler(unsigned long length, unsigned long elapsed, AdvancedRemote::Status status)
+void timeAndStatusHandler(unsigned long length, unsigned long elapsed, AdvancedRemote::PlaybackStatus status)
 {
   Serial.print("Length of track is ");
   printTime(length);
@@ -86,7 +101,7 @@ void timeAndStatusHandler(unsigned long length, unsigned long elapsed, AdvancedR
 
   switch (status)
   {
-    case AdvancedRemote::STATUS_STOP:
+    case AdvancedRemote::STATUS_STOPPED:
     Serial.println("stopped.");
     break;
 
@@ -104,12 +119,88 @@ void timeAndStatusHandler(unsigned long length, unsigned long elapsed, AdvancedR
   }
 }
 
-// Function that will be called with the playlist position
-// (in response to Mode 4 command 0x1E)
-void currentPlaylistPositionHandler(unsigned long position)
+void playlistPositionHandler(unsigned long position)
 {
-  Serial.print("Current playlist position is ");
-  printTime(position);
+  Serial.print("Playlist position: ");
+  Serial.println(position);
+}
+
+void titleHandler(const char *title)
+{
+  Serial.print("Title: ");
+  Serial.println(title);
+}
+
+void artistHandler(const char *artist)
+{
+  Serial.print("Artist: ");
+  Serial.println(artist);
+}
+
+void albumHandler(const char *album)
+{
+  Serial.print("Album: ");
+  Serial.println(album);
+}
+
+void pollingHandler(unsigned long elapsed)
+{
+  Serial.print("Poll: ");
+  printTime(elapsed);
+}
+
+void shuffleModeHandler(AdvancedRemote::ShuffleMode shuffleMode)
+{
+  Serial.print("Shuffle Mode: ");
+
+  switch (shuffleMode)
+  {
+    case AdvancedRemote::SHUFFLE_MODE_OFF:
+    Serial.println("Off");
+    break;
+
+    case AdvancedRemote::SHUFFLE_MODE_SONGS:
+    Serial.println("Songs");
+    break;
+
+    case AdvancedRemote::SHUFFLE_MODE_ALBUMS:
+    Serial.println("Albums");
+    break;
+
+  default:
+    Serial.print("Unrecognized ");
+    Serial.println(shuffleMode, DEC);
+  }
+}
+
+void repeatModeHandler(AdvancedRemote::RepeatMode repeatMode)
+{
+  Serial.print("Repeat Mode: ");
+
+  switch (repeatMode)
+  {
+    case AdvancedRemote::REPEAT_MODE_OFF:
+    Serial.println("Off");
+    break;
+
+    case AdvancedRemote::REPEAT_MODE_ONE_SONG:
+    Serial.println("One Song");
+    break;
+
+    case AdvancedRemote::REPEAT_MODE_ALL_SONGS:
+    Serial.println("All Songs");
+    break;
+
+  default:
+    Serial.print("Unrecognized ");
+    Serial.println(repeatMode, DEC);
+  }
+}
+
+void currentPlaylistSongCountHandler(unsigned long count)
+{
+  Serial.print("Current Playlist Song Count: ");
+  Serial.println(count);
 }
 
 void setup()
@@ -127,19 +218,29 @@ void setup()
   // use Serial3 (Mega-only) to talk to the iPod
   advancedRemote.setSerial(Serial3);
 
-  // register callback functions for the 3 things we're going to read
-  advancedRemote.setSongTitleHandler(songTitleHandler);
+  // register callback functions for the things we're going to read
+  advancedRemote.setiPodNameHandler(iPodNameHandler);
+  advancedRemote.setItemCountHandler(itemCountHandler);
+  advancedRemote.setItemNameHandler(itemNameHandler);
   advancedRemote.setTimeAndStatusHandler(timeAndStatusHandler);
-  advancedRemote.setCurrentPositionHandler(currentPlaylistPositionHandler);
+  advancedRemote.setPlaylistPositionHandler(playlistPositionHandler);
+  advancedRemote.setTitleHandler(titleHandler);
+  advancedRemote.setArtistHandler(artistHandler);
+  advancedRemote.setAlbumHandler(albumHandler);
+  advancedRemote.setPollingHandler(pollingHandler);
+  advancedRemote.setShuffleModeHandler(shuffleModeHandler);
+  advancedRemote.setRepeatModeHandler(repeatModeHandler);
+  advancedRemote.setCurrentPlaylistSongCountHandler(currentPlaylistSongCountHandler);
 
   // let the library set itself up, now we've done our configuration of it
-  advancedRemote.setup();
+  advancedRemote.setup(); 
 }
 
 void loop()
 {
-  // need to service iPod serial as often as we can
-  // TODO: how often?
+  // service iPod serial. this is who will end up
+  // calling our handler functions when responses
+  // come back from the iPod
   advancedRemote.loop();
 
   const int buttonState = digitalRead(BUTTON);
@@ -149,20 +250,48 @@ void loop()
   {
     if (buttonState == LOW)
     {
-      // toggle advanced remote mode
-      if (remoteEnabled)
+      buttonPressCount++;
+
+      if (buttonPressCount == 1)
       {
-        advancedRemote.disable();
-        remoteEnabled = false;
+        advancedRemote.enable();
+        delay(500);
+        advancedRemote.switchToMainLibraryPlaylist();
+        delay(250);
+        advancedRemote.getItemCount(AdvancedRemote::SONG);
+        delay(250);
+        advancedRemote.getItemNames(AdvancedRemote::SONG, 0, 10);
+        delay(250);
+        advancedRemote.switchToItem(AdvancedRemote::SONG, 2);
+      }
+      else if (buttonPressCount < 5)
+      {
+        advancedRemote.controlPlayback(AdvancedRemote::PLAYBACK_CONTROL_PLAY_PAUSE);
       }
       else
       {
-        advancedRemote.enable();
-        
-        // for proof-of-concept ask for some information back
-        advancedRemote.askForPos();
-        remoteEnabled = true;
+        advancedRemote.disable();
       }
+      /*
+      // toggle advanced remote mode
+       if (remoteEnabled)
+       {
+       advancedRemote.setPollingMode(AdvancedRemote::POLLING_STOP);
+       advancedRemote.disable();
+       remoteEnabled = false;
+       }
+       else
+       {
+       advancedRemote.enable();
+       delay(250);
+       //advancedRemote.controlPlayback(AdvancedRemote::PLAYBACK_CONTROL_PLAY_PAUSE);
+       //advancedRemote.getiPodName();
+       advancedRemote.setPollingMode(AdvancedRemote::POLLING_START);
+       //advancedRemote.getTimeAndStatusInfo();
+       //advancedRemote.getPlaylistPosition();
+       remoteEnabled = true;
+       }
+       */
     }
     else
     {
@@ -173,5 +302,8 @@ void loop()
     lastToggleTime = now;
   }
 }
+
+
+
 
 
