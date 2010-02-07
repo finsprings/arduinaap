@@ -25,6 +25,15 @@
 #include "iPodSerial.h"
 #include <ctype.h>
 
+static const char *STATE_NAME[] =
+{
+    "Waiting for Header 1",
+    "Waiting for Header 2",
+    "Waiting for length",
+    "Waiting for data",
+    "Waiting for checksum"
+};
+
 iPodSerial::iPodSerial()
     : receiveState(WAITING_FOR_HEADER1),
       dataSize(0),
@@ -51,7 +60,7 @@ void iPodSerial::setup()
     pSerial->begin(IPOD_SERIAL_RATE);
 }
 
-bool iPodSerial::validChecksum(const byte actual)
+bool iPodSerial::validChecksum(byte actual)
 {
     int expected = dataSize;
     for (int i = 0; i < dataSize; ++i)
@@ -119,8 +128,8 @@ void iPodSerial::processResponse()
         }
         pPrint->println();
 
-        pPrint->print("Receive State now ");
-        pPrint->println(receiveState, DEC);
+        pPrint->print("Receive Status: ");
+        pPrint->println(STATE_NAME[receiveState]);
     }
 
     switch (receiveState)
@@ -179,63 +188,20 @@ void iPodSerial::processResponse()
 }
 
 void iPodSerial::sendCommand(
-    const byte mode,
-    const byte cmdByte1,
-    const byte cmdByte2)
+    byte mode,
+    byte cmdByte1,
+    byte cmdByte2)
 {
-    // header
-    pSerial->print(HEADER1, BYTE);
-    pSerial->print(HEADER2, BYTE);
-
-    // length (mode + command bytes)
-    pSerial->print(3, BYTE);
-    checksum = 3;
-
-    // mode
-    pSerial->print(mode, BYTE);
-    checksum += mode;
-
-    // command
-    pSerial->print(cmdByte1, BYTE);
-    checksum += cmdByte1;
-
-    pSerial->print(cmdByte2, BYTE);
-    checksum += cmdByte2;
-
-    pSerial->print((0x100 - checksum) & 0xFF, BYTE);
+    sendHeader();
+    sendLength(0);
+    sendByte(mode);
+    sendByte(cmdByte1);
+    sendByte(cmdByte2);
+    sendChecksum();
 }
 
-void iPodSerial::sendCommandWithParam(
-    const byte mode,
-    const byte cmdByte1,
-    const byte cmdByte2,
-    const unsigned long param)
+void iPodSerial::sendParam(unsigned long param)
 {
-    if (pPrint)
-    {
-        pPrint->print("sending command ");
-        pPrint->println(cmdByte2, HEX);
-    }
-
-    // header
-    pSerial->print(HEADER1, BYTE);
-    pSerial->print(HEADER2, BYTE);
-
-    // length (mode + command bytes + param)
-    pSerial->print(7, BYTE);
-    checksum = 7;
-
-    // mode
-    pSerial->print(mode, BYTE);
-    checksum += mode;
-
-    // command
-    pSerial->print(cmdByte1, BYTE);
-    checksum += cmdByte1;
-
-    pSerial->print(cmdByte2, BYTE);
-    checksum += cmdByte2;
-
     // parameter (4-byte int sent big-endian)
     byte b = (param >> 3) & 0xFF;
     pSerial->print(b, BYTE);
@@ -252,7 +218,95 @@ void iPodSerial::sendCommandWithParam(
     b = (param >> 0) & 0xFF;
     pSerial->print(b, BYTE);
     checksum += b;
+}
 
+void iPodSerial::sendCommandWithOneByteParam(
+    byte mode,
+    byte cmdByte1,
+    byte cmdByte2,
+    byte param)
+{
+    sendHeader();
+    sendLength(1);
+    sendByte(mode);
+    sendByte(cmdByte1);
+    sendByte(cmdByte2);
+    sendByte(param);
+    sendChecksum();
+}
+
+void iPodSerial::sendCommandWithOneNumberParam(
+    byte mode,
+    byte cmdByte1,
+    byte cmdByte2,
+    unsigned long param)
+{
+    sendHeader();
+    sendLength(1 * 4);
+    sendByte(mode);
+    sendByte(cmdByte1);
+    sendByte(cmdByte2);
+    sendParam(param);
+    sendChecksum();
+}
+
+void iPodSerial::sendCommandWithOneByteAndOneNumberParam(
+    byte mode,
+    byte cmdByte1,
+    byte cmdByte2,
+    byte param1,
+    unsigned long param2)
+{
+    sendHeader();
+    sendLength(1 + (1 * 4));
+    sendByte(mode);
+    sendByte(cmdByte1);
+    sendByte(cmdByte2);
+    sendParam(param1);
+    sendParam(param2);
+    sendChecksum();
+}
+
+void iPodSerial::sendCommandWithOneByteAndTwoNumberParams(
+    byte mode,
+    byte cmdByte1,
+    byte cmdByte2,
+    byte param1,
+    unsigned long param2,
+    unsigned long param3)
+{
+    sendHeader();
+    sendLength(1 + (2 * 4));
+    sendByte(mode);
+    sendByte(cmdByte1);
+    sendByte(cmdByte2);
+    sendParam(param1);
+    sendParam(param2);
+    sendParam(param3);
+    sendChecksum();
+}
+
+void iPodSerial::sendHeader()
+{
+    pSerial->print(HEADER1, BYTE);
+    pSerial->print(HEADER2, BYTE);
+}
+
+void iPodSerial::sendLength(byte numberOfParamBytes)
+{
+    const byte length = 3 + numberOfParamBytes;
+    pSerial->print(length, BYTE);
+    checksum = length;
+}
+
+void iPodSerial::sendByte(byte b)
+{
+    pSerial->print(b, BYTE);
+    checksum += b;
+}
+
+void iPodSerial::sendChecksum()
+{
     pSerial->print((0x100 - checksum) & 0xFF, BYTE);
 }
 
@@ -270,5 +324,13 @@ void iPodSerial::processData()
     {
         pPrint->println("Ignoring data from iPod:");
         dumpReceive();
+    }
+}
+
+void iPodSerial::log(const char *message)
+{
+    if (pPrint)
+    {
+        pPrint->println(message);
     }
 }

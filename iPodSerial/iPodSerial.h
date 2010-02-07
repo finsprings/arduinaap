@@ -73,16 +73,39 @@ protected: // attributes
     Print *pPrint;
 
 protected: // methods
+    /**
+     * convenience function to print out a debug message
+     */
+    void log(const char *);
+
     void dumpReceive();
     void sendCommand(
-        const byte mode,
-        const byte cmdByte1,
-        const byte cmdByte2);
-    void sendCommandWithParam(
-        const byte mode,
-        const byte cmdByte1,
-        const byte cmdByte2,
-        const unsigned long param);
+        byte mode,
+        byte cmdByte1,
+        byte cmdByte2);
+    void sendCommandWithOneByteParam(
+        byte mode,
+        byte cmdByte1,
+        byte cmdByte2,
+        byte param);
+    void sendCommandWithOneNumberParam(
+        byte mode,
+        byte cmdByte1,
+        byte cmdByte2,
+        unsigned long param);
+    void sendCommandWithOneByteAndOneNumberParam(
+        byte mode,
+        byte cmdByte1,
+        byte cmdByte2,
+        byte param1,
+        unsigned long param2);
+    void sendCommandWithOneByteAndTwoNumberParams(
+        byte mode,
+        byte cmdByte1,
+        byte cmdByte2,
+        byte param1,
+        unsigned long param2,
+        unsigned long param3);
 
 private: // attributes
     static const byte HEADER1 = 0xFF;
@@ -92,7 +115,7 @@ private: // attributes
 
     enum ReceiveState
     {
-        WAITING_FOR_HEADER1,
+        WAITING_FOR_HEADER1 = 0,
         WAITING_FOR_HEADER2,
         WAITING_FOR_LENGTH,
         WAITING_FOR_DATA,
@@ -105,6 +128,11 @@ private: // attributes
     HardwareSerial *pSerial;
 
 private: // methods
+    void sendHeader();
+    void sendLength(byte numberOfParamBytes);
+    void sendByte(byte b);
+    void sendParam(unsigned long param);
+    void sendChecksum();
     bool validChecksum(const byte actual);
     void processResponse();
 
