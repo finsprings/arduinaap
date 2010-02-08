@@ -1,14 +1,17 @@
 ArduinAAP (Arduino Apple Accessory Protocol) provides the iPodSerial Arduino library.
 
-This library lets an Arduino interact with an iPod via the serial AAP protocol through the iPod's
-dock connector.
+This library lets an Arduino interact with an iPod, or the iPod application on the iPhone and iPod Touch,  via the serial AAP protocol through the iPod's dock connector.
 
 See http://nuxx.net/wiki/Apple_Accessory_Protocol for more details of AAP.
 
 The library sends commands via serial to the iPod and listens for responses. If and when responses come back over serial from the iPod, the library parses them and passes the data to callback functions provided by the user of the library. Responses are received asynchronously, and so the calling code is not blocked waiting for the iPod to respond; therefore it can continue to blink lights, scroll a display, poll buttons, or whatever.
 
-If you have an Arduino Mega you can take advantage of its multiple serial ports to have debugging messages out one serial port and communication with the iPod on another. The library provides setup functions to let you do this. You could probably also use SoftwareSerial for this on non-Mega Arduinos.
+If you have an Arduino Mega you can take advantage of its multiple serial ports to have debugging messages out one serial port and communication with the iPod on another. The library provides setup functions to let you do this. You could probably also use SoftwareSerial for this on non-Mega Arduinos, although SoftwareSerial doesn't extend the Print class so you'd need to tweak the setDebugPrint to take SoftwareSerial instead.
+
+The library consists of three classes: SimpleRemote, AdvancedRemote and iPodSerial. iPodSerial is a common base class for the other two; it does the low-level protocol stuff to talk to the iPod.
+
+The SimpleRemote class implements AAP Mode 2, aka iPod Remote, aka Simple Remote. This lets you send commands like play/pause, change the volume, etc, but also still control the iPod via its own interace. This is the mode I used for my in-car remote, the write up for which is at http://davidfindlay.org/weblog/files/2009_09_07_ipod_remote.php.
+
+The AdvancedRemote class implements AAP Mode 4, aka Advanced Remote. Be aware that in Advanced Remote mode the iPod will display a large checkmark and the message "OK to disconnect"; in this mode you cannot control the iPod via its own interface so you need to do everything from your Arduino sketch. Advanced Remote has more options though, like being able to put the iPod in polling mode, where it will send you back the currently-playing track's elapsed time every 500ms; you could use this to update a display controlled by your Arduino (I'm thinking nixie tubes with the arduinix shield would be cool!).
 
 NOTE: When connecting your iPod to your Arduino, please double-check your wiring. iPods are expensive and you don't want to break yours by sending it too high a voltage or whatever. You use this library at your own risk etc.
-
-
