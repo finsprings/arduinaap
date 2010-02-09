@@ -28,26 +28,45 @@
 #include <WProgram.h>
 #include "iPodSerial.h"
 
+/**
+ * Issue Simple Remote (AAP Mode 2) commands.
+ */
 class SimpleRemote : public iPodSerial
 {
 public:
     /**
-     * Sends the Simple Remote (Mode 2) 'play/pause button being pressed' command to the iPod.
+     * Send this command when the user lets go of a button.
+     * So, for example, if you want to simulate the user pressing
+     * Play, you should call sendPlay() when the button becomes
+     * depressed, then call sendButtonReleasd() when the button
+     * is let go. The same goes for all the other buttons.
+     * The time between send<SomeButton>() and sendButtonReleased()
+     * is significant - it can trigger press-and-hold behaviour
+     * and so on.
      */
+    void sendButtonReleased();
+
     void sendPlay();
-
-    /**
-     * Sends the Simple Remote (Mode 2) 'button released' command to the iPod.
-     */
-    void sendRelease();
-
-
-private: // attributes
-    static const byte PLAY_CMD_1 = 0x00;
-    static const byte PLAY_CMD_2 = 0x01;
-
-    static const byte BUTTON_RELEASED_CMD_1 = 0x00;
-    static const byte BUTTON_RELEASED_CMD_2 = 0x00;
+    void sendVolPlus();
+    void sendVolMinus();
+    void sendSkipForward();
+    void sendSkipBackward();
+    void sendNextAlbum();
+    void sendPreviousAlbum();
+    void sendStop();
+    void sendJustPlay();
+    void sendJustPause();
+    void sendToggleMute();
+    void sendNextPlaylist();
+    void sendPreviousPlaylist();
+    void sendToggleShuffle();
+    void sendToggleRepeat();
+    void sendiPodOff();
+    void sendiPodOn();
+    void sendMenuButton();
+    void sendOkSelectButton();
+    void sendScrollUp();
+    void sendScrollDown();
 };
 
 #endif // SIMPLE_REMOTE

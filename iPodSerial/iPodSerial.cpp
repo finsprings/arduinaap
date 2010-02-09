@@ -188,6 +188,22 @@ void iPodSerial::processResponse()
 }
 
 void iPodSerial::sendCommand(
+    size_t length,
+    const byte *pData)
+{
+    if (pPrint)
+    {
+        pPrint->print("Sending command of length: ");
+        pPrint->println(length, DEC);
+    }
+
+    sendHeader();
+    sendLength(length);
+    sendBytes(length, pData);
+    sendChecksum();
+}
+
+void iPodSerial::sendCommand(
     byte mode,
     byte cmdByte1,
     byte cmdByte2)
@@ -227,7 +243,7 @@ void iPodSerial::sendCommandWithOneByteParam(
     byte param)
 {
     sendHeader();
-    sendLength(1);
+    sendLength(1 + 1);
     sendByte(mode);
     sendByte(cmdByte1);
     sendByte(cmdByte2);
@@ -242,7 +258,7 @@ void iPodSerial::sendCommandWithOneNumberParam(
     unsigned long param)
 {
     sendHeader();
-    sendLength(1 * 4);
+    sendLength(1 + 1 + 1 + 4);
     sendByte(mode);
     sendByte(cmdByte1);
     sendByte(cmdByte2);
@@ -258,7 +274,7 @@ void iPodSerial::sendCommandWithOneByteAndOneNumberParam(
     unsigned long param2)
 {
     sendHeader();
-    sendLength(1 + (1 * 4));
+    sendLength(1 + 1 + 1 + 1 + (1 * 4));
     sendByte(mode);
     sendByte(cmdByte1);
     sendByte(cmdByte2);
@@ -276,7 +292,7 @@ void iPodSerial::sendCommandWithOneByteAndTwoNumberParams(
     unsigned long param3)
 {
     sendHeader();
-    sendLength(1 + (2 * 4));
+    sendLength(1 + 1 + 1 + 1 + (2 * 4));
     sendByte(mode);
     sendByte(cmdByte1);
     sendByte(cmdByte2);
@@ -292,11 +308,18 @@ void iPodSerial::sendHeader()
     pSerial->print(HEADER2, BYTE);
 }
 
-void iPodSerial::sendLength(byte numberOfParamBytes)
+void iPodSerial::sendLength(size_t length)
 {
-    const byte length = 3 + numberOfParamBytes;
     pSerial->print(length, BYTE);
     checksum = length;
+}
+
+void iPodSerial::sendBytes(size_t length, const byte *pData)
+{
+    for (size_t i = 0; i < length; i++)
+    {
+        sendByte(pData[i]);
+    }
 }
 
 void iPodSerial::sendByte(byte b)

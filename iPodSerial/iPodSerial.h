@@ -27,6 +27,11 @@
 
 #include <WProgram.h>
 
+/**
+ * Helper macro for figuring out the length of command byte arrays.
+ */
+#define ARRAY_LEN(array) (sizeof(array) / sizeof(array[0]))
+
 class iPodSerial
 {
 public:
@@ -79,6 +84,14 @@ protected: // methods
     void log(const char *);
 
     void dumpReceive();
+
+    /*
+     * Different flavours of command-sending method to keep
+     * it simple for the other classes. They're a bit silly,
+     * and you wouldn't want many more than there are, but they
+     * suffice for the simple and advanced remotes.
+     */
+    void sendCommand(size_t length, const byte *pData);
     void sendCommand(
         byte mode,
         byte cmdByte1,
@@ -129,7 +142,8 @@ private: // attributes
 
 private: // methods
     void sendHeader();
-    void sendLength(byte numberOfParamBytes);
+    void sendLength(size_t length);
+    void sendBytes(size_t length, const byte *pData);
     void sendByte(byte b);
     void sendParam(unsigned long param);
     void sendChecksum();

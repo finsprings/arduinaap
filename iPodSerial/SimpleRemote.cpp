@@ -24,14 +24,178 @@
  ******************************************************************************/
 #include "SimpleRemote.h"
 
-void SimpleRemote::sendPlay()
+void SimpleRemote::sendButtonReleased()
 {
-    log("Sending simple play");
-    sendCommand(SIMPLE_REMOTE_MODE, PLAY_CMD_1, PLAY_CMD_2);
+    static const byte button_released[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00};
+
+    log("Sending button_released");
+    sendCommand(ARRAY_LEN(button_released), button_released);
 }
 
-void SimpleRemote::sendRelease()
+void SimpleRemote::sendPlay()
 {
-    log("Sending simple release");
-    sendCommand(SIMPLE_REMOTE_MODE, BUTTON_RELEASED_CMD_1, BUTTON_RELEASED_CMD_2);
+    static const byte play[] = {SIMPLE_REMOTE_MODE, 0x00, 0x01};
+
+    log("Sending play");
+    sendCommand(ARRAY_LEN(play), play);
+}
+
+void SimpleRemote::sendVolPlus()
+{
+    static const byte vol_plus[] = {SIMPLE_REMOTE_MODE, 0x00, 0x02};
+
+    log("Sending vol_plus");
+    sendCommand(ARRAY_LEN(vol_plus), vol_plus);
+}
+
+void SimpleRemote::sendVolMinus()
+{
+    static const byte vol_minus[] = {SIMPLE_REMOTE_MODE, 0x00, 0x04};
+
+    log("Sending vol_minus");
+    sendCommand(ARRAY_LEN(vol_minus), vol_minus);
+}
+
+void SimpleRemote::sendSkipForward()
+{
+    static const byte skip_forward[] = {SIMPLE_REMOTE_MODE, 0x00, 0x08};
+
+    log("Sending skip_forward");
+    sendCommand(ARRAY_LEN(skip_forward), skip_forward);
+}
+
+void SimpleRemote::sendSkipBackward()
+{
+    static const byte skip_backward[] = {SIMPLE_REMOTE_MODE, 0x00, 0x10};
+
+    log("Sending skip_backward");
+    sendCommand(ARRAY_LEN(skip_backward), skip_backward);
+}
+
+void SimpleRemote::sendNextAlbum()
+{
+    static const byte next_album[] = {SIMPLE_REMOTE_MODE, 0x00, 0x20};
+
+    log("Sending next_album");
+    sendCommand(ARRAY_LEN(next_album), next_album);
+}
+
+void SimpleRemote::sendPreviousAlbum()
+{
+    static const byte previous_album[] = {SIMPLE_REMOTE_MODE, 0x00, 0x40};
+
+    log("Sending previous_album");
+    sendCommand(ARRAY_LEN(previous_album), previous_album);
+}
+
+void SimpleRemote::sendStop()
+{
+    static const byte stop[] = {SIMPLE_REMOTE_MODE, 0x00, 0x80};
+
+    log("Sending stop");
+    sendCommand(ARRAY_LEN(stop), stop);
+}
+
+void SimpleRemote::sendJustPlay()
+{
+    static const byte just_play[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x01};
+
+    log("Sending just_play");
+    sendCommand(ARRAY_LEN(just_play), just_play);
+}
+
+void SimpleRemote::sendJustPause()
+{
+    static const byte just_pause[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x02};
+
+    log("Sending just_pause");
+    sendCommand(ARRAY_LEN(just_pause), just_pause);
+}
+
+void SimpleRemote::sendToggleMute()
+{
+    static const byte toggle_mute[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x04};
+
+    log("Sending toggle_mute");
+    sendCommand(ARRAY_LEN(toggle_mute), toggle_mute);
+}
+
+void SimpleRemote::sendNextPlaylist()
+{
+    static const byte next_playlist[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x20};
+
+    log("Sending next_playlist");
+    sendCommand(ARRAY_LEN(next_playlist), next_playlist);
+}
+
+void SimpleRemote::sendPreviousPlaylist()
+{
+    static const byte previous_playlist[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x40};
+
+    log("Sending previous_playlist");
+    sendCommand(ARRAY_LEN(previous_playlist), previous_playlist);
+}
+
+void SimpleRemote::sendToggleShuffle()
+{
+    static const byte toggle_shuffle[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x80};
+
+    log("Sending toggle_shuffle");
+    sendCommand(ARRAY_LEN(toggle_shuffle), toggle_shuffle);
+}
+
+void SimpleRemote::sendToggleRepeat()
+{
+    static const byte toggle_repeat[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x00, 0x01};
+
+    log("Sending toggle_repeat");
+    sendCommand(ARRAY_LEN(toggle_repeat), toggle_repeat);
+}
+
+void SimpleRemote::sendiPodOff()
+{
+    static const byte ipod_off[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x00, 0x04};
+
+    log("Sending ipod_off");
+    sendCommand(ARRAY_LEN(ipod_off), ipod_off);
+}
+
+void SimpleRemote::sendiPodOn()
+{
+    static const byte ipod_on[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x00, 0x08};
+
+    log("Sending ipod_on");
+    sendCommand(ARRAY_LEN(ipod_on), ipod_on);
+}
+
+void SimpleRemote::sendMenuButton()
+{
+    static const byte menu_button[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x00, 0x40};
+
+    log("Sending menu_button");
+    sendCommand(ARRAY_LEN(menu_button), menu_button);
+}
+
+void SimpleRemote::sendOkSelectButton()
+{
+    static const byte ok_select_button[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x00, 0x80};
+
+    log("Sending ok_select_button");
+    sendCommand(ARRAY_LEN(ok_select_button), ok_select_button);
+}
+
+void SimpleRemote::sendScrollUp()
+{
+    static const byte scroll_up[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x00, 0x00, 0x01};
+
+    log("Sending scroll_up");
+    sendCommand(ARRAY_LEN(scroll_up), scroll_up);
+}
+
+void SimpleRemote::sendScrollDown()
+{
+    static const byte scroll_down[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00, 0x00, 0x00, 0x02};
+
+    log("Sending scroll_down");
+    sendCommand(ARRAY_LEN(scroll_down), scroll_down);
 }
