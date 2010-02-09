@@ -76,7 +76,7 @@ void loop()
     }
     else
     {
-      simpleRemote.sendRelease();
+      simpleRemote.sendButtonReleased();
     }
 
     lastButtonState = buttonState;
