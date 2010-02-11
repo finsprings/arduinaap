@@ -1,0 +1,103 @@
+#######################################
+# Syntax Coloring Map For iPodSerial
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+SimpleRemote	 KEYWORD1
+AdvancedRemote	 KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+sendButtonReleased	KEYWORD2
+sendPlay	KEYWORD2
+sendVolPlus	KEYWORD2
+sendVolMinus	KEYWORD2
+sendSkipForward	KEYWORD2
+sendSkipBackward	KEYWORD2
+sendNextAlbum	KEYWORD2
+sendPreviousAlbum	KEYWORD2
+sendStop	KEYWORD2
+sendJustPlay	KEYWORD2
+sendJustPause	KEYWORD2
+sendToggleMute	KEYWORD2
+sendNextPlaylist	KEYWORD2
+sendPreviousPlaylist	KEYWORD2
+sendToggleShuffle	KEYWORD2
+sendToggleRepeat	KEYWORD2
+sendiPodOff	KEYWORD2
+sendiPodOn	KEYWORD2
+sendMenuButton	KEYWORD2
+sendOkSelectButton	KEYWORD2
+sendScrollUp	KEYWORD2
+sendScrollDown	KEYWORD2
+
+setiPodNameHandler	KEYWORD2
+setItemCountHandler	KEYWORD2
+setItemNameHandler	KEYWORD2
+setTimeAndStatusHandler	KEYWORD2
+setPlaylistPositionHandler	KEYWORD2
+setTitleHandler	KEYWORD2
+setArtistHandler	KEYWORD2
+setAlbumHandler	KEYWORD2
+setPollingHandler	KEYWORD2
+setShuffleModeHandler	KEYWORD2
+setRepeatModeHandler	KEYWORD2
+setCurrentPlaylistSongCountHandler	KEYWORD2
+enable	KEYWORD2
+disable	KEYWORD2
+getiPodName	KEYWORD2
+switchToMainLibraryPlaylist	KEYWORD2
+switchToItem	KEYWORD2
+getItemCount	KEYWORD2
+getItemNames	KEYWORD2
+getTimeAndStatusInfo	KEYWORD2
+getPlaylistPosition	KEYWORD2
+getTitle	KEYWORD2
+getArtist	KEYWORD2
+getAlbum	KEYWORD2
+setPollingMode	KEYWORD2
+controlPlayback	KEYWORD2
+getShuffleMode	KEYWORD2
+setShuffleMode	KEYWORD2
+getRepeatMode	KEYWORD2
+setRepeatMode	KEYWORD2
+getSongCountInCurrentPlaylist	KEYWORD2
+jumpToSongInCurrentPlaylist	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+PLAYLIST	LITERAL1
+ARTIST	LITERAL1
+ALBUM	LITERAL1
+GENRE	LITERAL1
+SONG	LITERAL1
+COMPOSER	LITERAL1
+STATUS_STOPPED	LITERAL1
+STATUS_PLAYING	LITERAL1
+STATUS_PAUSED	LITERAL1
+POLLING_START	LITERAL1
+POLLING_STOP	LITERAL1
+PLAYBACK_CONTROL_PLAY_PAUSE	LITERAL1
+PLAYBACK_CONTROL_STOP	LITERAL1
+PLAYBACK_CONTROL_SKIP_FORWARD	LITERAL1
+PLAYBACK_CONTROL_SKIP_BACKWARD	LITERAL1
+PLAYBACK_CONTROL_FAST_FORWARD	LITERAL1
+PLAYBACK_CONTROL_REVERSE	LITERAL1
+PLAYBACK_CONTROL_STOP_FF_OR_REV	LITERAL1
+SHUFFLE_MODE_OFF	LITERAL1
+SHUFFLE_MODE_SONGS	LITERAL1
+SHUFFLE_MODE_ALBUMS	LITERAL1
+REPEAT_MODE_OFF	LITERAL1
+REPEAT_MODE_ONE_SONG	LITERAL1
+REPEAT_MODE_ALL_SONGS	LITERAL1
