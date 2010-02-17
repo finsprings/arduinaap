@@ -91,7 +91,7 @@ protected: // methods
      * and you wouldn't want many more than there are, but they
      * suffice for the simple and advanced remotes.
      */
-    void sendCommand(size_t length, const byte *pData);
+    void sendCommandWithLength(size_t length, const byte *pData);
     void sendCommand(
         byte mode,
         byte cmdByte1,
