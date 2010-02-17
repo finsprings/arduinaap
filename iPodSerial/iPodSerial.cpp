@@ -220,14 +220,14 @@ void iPodSerial::sendCommandWithOneByteParam(
     byte mode,
     byte cmdByte1,
     byte cmdByte2,
-    byte param)
+    byte byteParam)
 {
     sendHeader();
     sendLength(1 + 1 + 1 + 1);
     sendByte(mode);
     sendByte(cmdByte1);
     sendByte(cmdByte2);
-    sendByte(param);
+    sendByte(byteParam);
     sendChecksum();
 }
 
@@ -235,14 +235,14 @@ void iPodSerial::sendCommandWithOneNumberParam(
     byte mode,
     byte cmdByte1,
     byte cmdByte2,
-    unsigned long param)
+    unsigned long numberParam)
 {
     sendHeader();
     sendLength(1 + 1 + 1 + 4);
     sendByte(mode);
     sendByte(cmdByte1);
     sendByte(cmdByte2);
-    sendParam(param);
+    sendParam(numberParam);
     sendChecksum();
 }
 
@@ -250,16 +250,16 @@ void iPodSerial::sendCommandWithOneByteAndOneNumberParam(
     byte mode,
     byte cmdByte1,
     byte cmdByte2,
-    byte param1,
-    unsigned long param2)
+    byte byteParam1,
+    unsigned long numberParam2)
 {
     sendHeader();
     sendLength(1 + 1 + 1 + 1 + (1 * 4));
     sendByte(mode);
     sendByte(cmdByte1);
     sendByte(cmdByte2);
-    sendParam(param1);
-    sendParam(param2);
+    sendByte(byteParam1);
+    sendParam(numberParam2);
     sendChecksum();
 }
 
@@ -267,18 +267,18 @@ void iPodSerial::sendCommandWithOneByteAndTwoNumberParams(
     byte mode,
     byte cmdByte1,
     byte cmdByte2,
-    byte param1,
-    unsigned long param2,
-    unsigned long param3)
+    byte byteParam1,
+    unsigned long numberParam2,
+    unsigned long numberParam3)
 {
     sendHeader();
     sendLength(1 + 1 + 1 + 1 + (2 * 4));
     sendByte(mode);
     sendByte(cmdByte1);
     sendByte(cmdByte2);
-    sendParam(param1);
-    sendParam(param2);
-    sendParam(param3);
+    sendByte(byteParam1);
+    sendParam(numberParam2);
+    sendParam(numberParam3);
     sendChecksum();
 }
 
@@ -307,14 +307,12 @@ void iPodSerial::sendByte(byte b)
     pSerial->print(b, BYTE);
     checksum += b;
 
-    /*
     // likely to slow stuff down!
     if (pPrint)
     {
         pPrint->print("sent byte ");
         pPrint->println(b, HEX);
     }
-    */
 }
 
 void iPodSerial::sendParam(unsigned long param)
