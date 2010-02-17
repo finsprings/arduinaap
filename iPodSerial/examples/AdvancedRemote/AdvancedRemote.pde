@@ -258,11 +258,11 @@ void loop()
         delay(500);
         advancedRemote.switchToMainLibraryPlaylist();
         delay(250);
-        advancedRemote.getItemCount(AdvancedRemote::SONG);
+        advancedRemote.getItemCount(AdvancedRemote::ITEM_SONG);
         delay(250);
-        advancedRemote.getItemNames(AdvancedRemote::SONG, 0, 10);
+        advancedRemote.getItemNames(AdvancedRemote::ITEM_SONG, 0, 10);
         delay(250);
-        advancedRemote.switchToItem(AdvancedRemote::SONG, 2);
+        advancedRemote.switchToItem(AdvancedRemote::ITEM_SONG, 2);
       }
       else if (buttonPressCount < 5)
       {

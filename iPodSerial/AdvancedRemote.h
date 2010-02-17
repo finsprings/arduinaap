@@ -33,12 +33,12 @@ class AdvancedRemote : public iPodSerial
 public: // enums
     enum ItemType
     {
-        PLAYLIST = 0x01,
-        ARTIST = 0x02,
-        ALBUM = 0x03,
-        GENRE = 0x04,
-        SONG = 0x05,
-        COMPOSER = 0x06
+        ITEM_PLAYLIST = 0x01,
+        ITEM_ARTIST = 0x02,
+        ITEM_ALBUM = 0x03,
+        ITEM_GENRE = 0x04,
+        ITEM_SONG = 0x05,
+        ITEM_COMPOSER = 0x06
     };
 
     enum PlaybackStatus
@@ -79,14 +79,42 @@ public: // enums
         REPEAT_MODE_ALL_SONGS = 0x02
     };
 
+    enum Feedback
+    {
+        FEEDBACK_SUCCESS = 0x00,
+        FEEDBACK_FAILURE = 0x02,
+        FEEDBACK_INVALID_PARAM = 0x04,
+        FEEDBACK_SENT_RESPONSE = 0x05
+    };
+
+    // the internal command types; only useful if you're implementing the Feedback handler
+    static const byte CMD_GET_IPOD_NAME = 0x14;
+    static const byte CMD_SWITCH_TO_MAIN_LIBRARY_PLAYLIST = 0x16;
+    static const byte CMD_SWITCH_TO_ITEM = 0x17;
+    static const byte CMD_GET_ITEM_COUNT = 0x18;
+    static const byte CMD_GET_ITEM_NAMES = 0x1A;
+    static const byte CMD_GET_TIME_AND_STATUS_INFO = 0x1C;
+    static const byte CMD_GET_PLAYLIST_POSITION = 0x1E;
+    static const byte CMD_GET_TITLE = 0x20;
+    static const byte CMD_GET_ARTIST = 0x22;
+    static const byte CMD_GET_ALBUM = 0x24;
+    static const byte CMD_POLLING_MODE = 0x26;
+    static const byte CMD_PLAYBACK_CONTROL = 0x29;
+    static const byte CMD_GET_SHUFFLE_MODE = 0x2C;
+    static const byte CMD_SET_SHUFFLE_MODE = 0x2E;
+    static const byte CMD_GET_REPEAT_MODE = 0x2F;
+    static const byte CMD_SET_REPEAT_MODE = 0x31;
+    static const byte CMD_GET_SONG_COUNT_IN_CURRENT_PLAYLIST = 0x35;
+    static const byte CMD_JUMP_TO_SONG_IN_CURRENT_PLAYLIST = 0x37;
 
 public: // handler definitions
+    typedef void FeedbackHandler_t(Feedback feedback, byte cmd);
     typedef void iPodNameHandler_t(const char *ipodName);
     typedef void ItemCountHandler_t(unsigned long count);
-    typedef void ItemNameHandler_t(const char *itemName);
+    typedef void ItemNameHandler_t(unsigned long offet, const char *itemName);
     typedef void TimeAndStatusHandler_t(unsigned long trackLengthInMilliseconds,
-                                      unsigned long elapsedTimeInMilliseconds,
-                                      PlaybackStatus status);
+                                        unsigned long elapsedTimeInMilliseconds,
+                                        PlaybackStatus status);
     typedef void PlaylistPositionHandler_t(unsigned long playlistPosition);
     typedef void TitleHandler_t(const char *title);
     typedef void ArtistHandler_t(const char *artist);
@@ -98,6 +126,7 @@ public: // handler definitions
 
 
 public: // handler setting methods; you probably want to call these from init()
+    void setFeedbackHandler(FeedbackHandler_t newHandler);
     void setiPodNameHandler(iPodNameHandler_t newHandler);
     void setItemCountHandler(ItemCountHandler_t newHandler);
     void setItemNameHandler(ItemNameHandler_t newHandler);
@@ -251,31 +280,17 @@ public: // methods
      */
     void jumpToSongInCurrentPlaylist(unsigned long index);
 
+    /**
+     * returns true if advanced mode is enabled, false otherwise.
+     * Will be fooled if you put the iPod in advanced mode without called enable()
+     */
+    bool isCurrentlyEnabled();
 
 private: // attributes
     static const byte RESPONSE_BAD = 0x00;
     static const byte RESPONSE_FEEDBACK = 0x01;
 
-    static const byte CMD_GET_IPOD_NAME = 0x14;
-    static const byte CMD_SWITCH_TO_MAIN_LIBRARY_PLAYLIST = 0x16;
-    static const byte CMD_SWITCH_TO_ITEM = 0x17;
-    static const byte CMD_GET_ITEM_COUNT = 0x18;
-    static const byte CMD_GET_ITEM_NAMES = 0x1A;
-    static const byte CMD_GET_TIME_AND_STATUS_INFO = 0x1C;
-    static const byte CMD_GET_PLAYLIST_POSITION = 0x1E;
-    static const byte CMD_GET_TITLE = 0x20;
-    static const byte CMD_GET_ARTIST = 0x22;
-    static const byte CMD_GET_ALBUM = 0x24;
-    static const byte CMD_POLLING_MODE = 0x26;
-    static const byte CMD_PLAYBACK_CONTROL = 0x29;
-    static const byte CMD_GET_SHUFFLE_MODE = 0x2C;
-    static const byte CMD_SET_SHUFFLE_MODE = 0x2E;
-    static const byte CMD_GET_REPEAT_MODE = 0x2F;
-    static const byte CMD_SET_REPEAT_MODE = 0x31;
-    static const byte CMD_GET_SONG_COUNT_IN_CURRENT_PLAYLIST = 0x35;
-    static const byte CMD_JUMP_TO_SONG_IN_CURRENT_PLAYLIST = 0x37;
-
-
+    FeedbackHandler_t *pFeedbackHandler;
     iPodNameHandler_t *piPodNameHandler;
     ItemCountHandler_t *pItemCountHandler;
     ItemNameHandler_t *pItemNameHandler;
@@ -289,6 +304,7 @@ private: // attributes
     RepeatModeHandler_t *pRepeatModeHandler;
     CurrentPlaylistSongCountHandler_t *pCurrentPlaylistSongCountHandler;
 
+    bool currentlyEnabled;
 
 private: // methods
     virtual void processData();

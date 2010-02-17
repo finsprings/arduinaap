@@ -25,7 +25,8 @@
 #include "AdvancedRemote.h"
 
 AdvancedRemote::AdvancedRemote()
-    : piPodNameHandler(0),
+    : pFeedbackHandler(0),
+      piPodNameHandler(0),
       pItemCountHandler(0),
       pItemNameHandler(0),
       pTimeAndStatusHandler(0),
@@ -36,8 +37,14 @@ AdvancedRemote::AdvancedRemote()
       pPollingHandler(0),
       pShuffleModeHandler(0),
       pRepeatModeHandler(0),
-      pCurrentPlaylistSongCountHandler(0)
+      pCurrentPlaylistSongCountHandler(0),
+      currentlyEnabled(false)
 {
+}
+
+void AdvancedRemote::setFeedbackHandler(FeedbackHandler_t newHandler)
+{
+    pFeedbackHandler = newHandler;
 }
 
 void AdvancedRemote::setiPodNameHandler(iPodNameHandler_t newHandler)
@@ -104,12 +111,14 @@ void AdvancedRemote::enable()
 {
     log("enabling advanced remote mode");
     sendCommand(MODE_SWITCHING_MODE, 0x01, ADVANCED_REMOTE_MODE);
+    currentlyEnabled = true; // strictly it's not until we get feedback of success
 }
 
 void AdvancedRemote::disable()
 {
     log("disabling advanced remote mode");
     sendCommand(MODE_SWITCHING_MODE, 0x01, SIMPLE_REMOTE_MODE);
+    currentlyEnabled = false; // strictly it's not until we get feedback of success
 }
 
 void AdvancedRemote::getiPodName()
@@ -139,7 +148,7 @@ void AdvancedRemote::getItemCount(AdvancedRemote::ItemType itemType)
 void AdvancedRemote::getItemNames(AdvancedRemote::ItemType itemType, unsigned long offset, unsigned long count)
 {
     log("getItemNames");
-    sendCommandWithOneByteAndTwoNumberParams(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_ITEM_NAMES, itemType, offset, count);
+     sendCommandWithOneByteAndTwoNumberParams(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_ITEM_NAMES, itemType, offset, count);
 }
 
 void AdvancedRemote::getTimeAndStatusInfo()
@@ -225,9 +234,9 @@ void AdvancedRemote::processData()
     const byte mode = dataBuffer[0];
     if (mode != ADVANCED_REMOTE_MODE)
     {
-        if (pPrint)
+        if (pDebugPrint)
         {
-            pPrint->println("response not for adv mode so ignoring");
+            pDebugPrint->println("response not for adv mode so ignoring");
             dumpReceive();
         }
 
@@ -237,9 +246,9 @@ void AdvancedRemote::processData()
     const byte firstCommandByte = dataBuffer[1];
     if (firstCommandByte != 0x00)
     {
-        if (pPrint)
+        if (pDebugPrint)
         {
-            pPrint->println("1st cmd byte in response not 0x00 so ignoring");
+            pDebugPrint->println("1st cmd byte in response not 0x00 so ignoring");
             dumpReceive();
         }
 
@@ -250,14 +259,14 @@ void AdvancedRemote::processData()
     switch (secondCommandByte)
     {
     case RESPONSE_BAD:
-        if (pPrint)
+        if (pDebugPrint)
         {
-            pPrint->print("BAD Response: Result=0x");
-            pPrint->print(dataBuffer[3], HEX);
-            pPrint->print(", Command=0x");
-            pPrint->print(dataBuffer[4], HEX);
-            pPrint->print(", 0x");
-            pPrint->println(dataBuffer[5], HEX);
+            pDebugPrint->print("BAD Response: Result=0x");
+            pDebugPrint->print(dataBuffer[3], HEX);
+            pDebugPrint->print(", Command=0x");
+            pDebugPrint->print(dataBuffer[4], HEX);
+            pDebugPrint->print(", 0x");
+            pDebugPrint->println(dataBuffer[5], HEX);
         }
         return;
 
@@ -269,14 +278,20 @@ void AdvancedRemote::processData()
          * 4=you exceeded the limit of whatever you were requesting/wrong parameter-count,
          * 5=sent an iPod Response instead of a command
          */
-        if (pPrint)
+        if (pDebugPrint)
         {
-            pPrint->print("Feedback Response: Result=0x");
-            pPrint->print(dataBuffer[3], HEX);
-            pPrint->print(", Command=0x");
-            pPrint->print(dataBuffer[4], HEX);
-            pPrint->print(", 0x");
-            pPrint->println(dataBuffer[5], HEX);
+            pDebugPrint->print("Feedback Response: Result=0x");
+            pDebugPrint->print(dataBuffer[3], HEX);
+            pDebugPrint->print(", Command=0x");
+            pDebugPrint->print(dataBuffer[4], HEX);
+            pDebugPrint->print(", 0x");
+            pDebugPrint->println(dataBuffer[5], HEX);
+        }
+
+        if (pFeedbackHandler)
+        {
+            const Feedback feedback = (Feedback) dataBuffer[3];
+            pFeedbackHandler(feedback, dataBuffer[5]);
         }
         return;
     }
@@ -290,7 +305,7 @@ void AdvancedRemote::processData()
     switch (commandThisIsAResponseFor)
     {
     case CMD_GET_IPOD_NAME:
-        if (piPodNameHandler)
+        if (piPodNameHandler)   
         {
             piPodNameHandler((const char *) pData);
         }
@@ -306,7 +321,9 @@ void AdvancedRemote::processData()
     case CMD_GET_ITEM_NAMES:
         if (pItemNameHandler)
         {
-            pItemNameHandler((const char *) pData);
+            const unsigned long itemOffset = endianConvert(pData);
+            const char *itemName = (const char *) (pData + 4);
+            pItemNameHandler(itemOffset, itemName);
         }
         break;
 
@@ -380,9 +397,9 @@ void AdvancedRemote::processData()
         break;
 
     default:
-        if (pPrint)
+        if (pDebugPrint)
         {
-            pPrint->print("unsupported response: ");
+            pDebugPrint->print("unsupported response: ");
             dumpReceive();
         }
         break;
@@ -404,4 +421,9 @@ unsigned long AdvancedRemote::endianConvert(const byte *p)
         (((unsigned long) p[2]) << 8)  |
         (((unsigned long) p[1]) << 16) |
         (((unsigned long) p[0]) << 24);
+}
+
+bool AdvancedRemote::isCurrentlyEnabled()
+{
+    return currentlyEnabled;
 }
