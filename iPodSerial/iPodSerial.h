@@ -64,9 +64,15 @@ public:
 
     /**
      * Sets the Print object to which debug messages will be directed.
-     * By default there isn't one ando debug messages are off.
+     * By default there isn't one and so debug messages are off.
      */
     void setDebugPrint(Print &newDebugSerial);
+
+    /**
+     * Sets the Print object to which log messages will be directed.
+     * By default there isn't one and so log messages are off.
+     */
+    void setLogPrint(Print &newLogSerial);
 
 protected: // attributes
     static const byte MODE_SWITCHING_MODE = 0x00;
@@ -75,7 +81,8 @@ protected: // attributes
 
     byte dataSize;
     byte dataBuffer[128];
-    Print *pPrint;
+    Print *pDebugPrint;
+    Print *pLogPrint;
 
 protected: // methods
     /**
