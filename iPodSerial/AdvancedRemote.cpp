@@ -371,7 +371,9 @@ void AdvancedRemote::processData()
     case CMD_POLLING_MODE:
         if (pPollingHandler)
         {
-            pPollingHandler(endianConvert(pData));
+            const byte iDontKnowWhatThisIs = *pData; // usually a 4?
+            const unsigned long elapsedTimeMs = endianConvert(pData + 1);
+            pPollingHandler(elapsedTimeMs);
         }
         break;
 

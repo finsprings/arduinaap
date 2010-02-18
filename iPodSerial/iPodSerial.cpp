@@ -130,6 +130,9 @@ void iPodSerial::processResponse()
     const int b = pSerial->read();
     if (pDebugPrint)
     {
+        pDebugPrint->print("Receive Status: ");
+        pDebugPrint->println(STATE_NAME[receiveState]);
+
         pDebugPrint->print(b, HEX);
         pDebugPrint->print(" ");
 
@@ -138,9 +141,6 @@ void iPodSerial::processResponse()
             pDebugPrint->print(b, BYTE);
         }
         pDebugPrint->println();
-
-        pDebugPrint->print("Receive Status: ");
-        pDebugPrint->println(STATE_NAME[receiveState]);
     }
 
     switch (receiveState)
