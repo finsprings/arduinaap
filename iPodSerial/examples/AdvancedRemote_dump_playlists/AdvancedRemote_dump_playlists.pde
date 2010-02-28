@@ -57,7 +57,7 @@ unsigned long playlistCount = 0;
 
 void feedbackHandler(AdvancedRemote::Feedback feedback, byte cmd)
 {
-  Serial.print("got feedback of ");
+  Serial.print("got feedback of 0x");
   Serial.print(feedback, HEX);
   Serial.print(" for cmd 0x");
   Serial.println(cmd, HEX);
