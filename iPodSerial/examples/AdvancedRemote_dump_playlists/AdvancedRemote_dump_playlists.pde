@@ -40,7 +40,7 @@
 #error "This example is for the Mega, because it uses Serial3 for the iPod and Serial for debug messages"
 #endif
 
-const byte BUTTON_PIN = 5;
+const byte BUTTON_PIN = 22;
 const unsigned long DEBOUNCE_MS = 50;
 
 Bounce button(BUTTON_PIN, DEBOUNCE_MS);
@@ -59,7 +59,7 @@ void feedbackHandler(AdvancedRemote::Feedback feedback, byte cmd)
 {
   Serial.print("got feedback of ");
   Serial.print(feedback, HEX);
-  Serial.print(" for cmd ");
+  Serial.print(" for cmd 0x");
   Serial.println(cmd, HEX);
 
   if (feedback != AdvancedRemote::FEEDBACK_SUCCESS)
@@ -67,15 +67,6 @@ void feedbackHandler(AdvancedRemote::Feedback feedback, byte cmd)
     Serial.println("Giving up as feedback wasn't SUCCESS");
     return;
   }
-
-  switch (cmd)
-  {
-    case AdvancedRemote::CMD_SWITCH_TO_MAIN_LIBRARY_PLAYLIST:
-    // so we're now at the main library playlist
-    advancedRemote.getItemCount(AdvancedRemote::ITEM_PLAYLIST);
-    // wait for our item count handler to get called now
-    break;
-  }  
 }
 
 void itemCountHandler(unsigned long count)
@@ -155,7 +146,7 @@ void loop()
       // start our commands - we'll do them in sequence
       // as our handlers get called. for example, this
       // one will call our Feedback handler when it's done
-      advancedRemote.switchToMainLibraryPlaylist();
+      advancedRemote.getItemCount(AdvancedRemote::ITEM_PLAYLIST);
     }
   }
 }
