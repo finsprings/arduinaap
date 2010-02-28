@@ -42,7 +42,7 @@
 #error "This example is for the Mega, because it uses Serial3 for the iPod and Serial for debug messages"
 #endif
 
-const byte BUTTON_PIN = 5;
+const byte BUTTON_PIN = 22;
 const unsigned long DEBOUNCE_MS = 50;
 
 Bounce button(BUTTON_PIN, DEBOUNCE_MS);
@@ -71,8 +71,8 @@ void feedbackHandler(AdvancedRemote::Feedback feedback, byte cmd)
 
   switch (cmd)
   {
-    case AdvancedRemote::CMD_SWITCH_TO_MAIN_LIBRARY_PLAYLIST:
-    Serial.println("Now at the main library playlist");
+    case AdvancedRemote::CMD_SWITCH_TO_ITEM:
+    Serial.println("(Presumably) now at the playlist zero (the main one)");
     Serial.println("Asking for song count");
     advancedRemote.getSongCountInCurrentPlaylist();
     // wait for our song count handler to get called now
@@ -125,18 +125,19 @@ void albumHandler(const char *name)
   Serial.print("Album: ");
   Serial.println(name);
 
-  Serial.println("Turning on polling");
+  Serial.println("Turning on polling (which also seems to make it start playing");
   advancedRemote.setPollingMode(AdvancedRemote::POLLING_START);
+  Serial.println("The button will let you do play/pause now. Reset Arduino to go back to normal mode");
 }
 
 void currentPlaylistSongCountHandler(unsigned long count)
 {
   Serial.print("Current playlist song count is ");
   Serial.println(count, DEC);
-  
+
   // pick any old song for test porpoises
   chosenSongIndexIntoPlaylist = count / 2;
-  
+
   Serial.print("Jumping to song at index ");
   Serial.println(chosenSongIndexIntoPlaylist, DEC);
   advancedRemote.jumpToSongInCurrentPlaylist(chosenSongIndexIntoPlaylist);
@@ -215,10 +216,11 @@ void loop()
       // start our commands - we'll do them in sequence
       // as our handlers get called. for example, this
       // one will call our Feedback handler when it's done
-      advancedRemote.switchToMainLibraryPlaylist();
+      advancedRemote.switchToItem(AdvancedRemote::ITEM_PLAYLIST, 0);
     }
   }
 }
+
 
 
 
