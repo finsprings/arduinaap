@@ -25,11 +25,11 @@
 
 // Example of Advanced Remote (Mode 4) dumping all the playlists on an iPod
 //
-// WARNING:
-// Note that this example could leave your iPod in Advanced Mode, which puts your
-// iPod's screen into "OK to disconnect" mode. It should come back out of that
-// mode after a few seconds, but if not you can power it off and back on,
-// or send it a command to go back into Simple Remote mode.
+// If your iPod ends up stuck with the "OK to disconnect" message on its display,
+// reset the Arduino. There's a called to AdvancedRemote::disable() in the setup()
+// function which should put the iPod back to its normal mode. If that doesn't
+// work, or you are unable to reset your Arduino for some reason, resetting the
+// iPod will put it back to its normal mode.
 
 #include <AdvancedRemote.h>
 #include <Bounce.h>
@@ -84,7 +84,7 @@ void itemCountHandler(unsigned long count)
   Serial.println(count);
 
   playlistCount = count;
-  
+
   // that ought to be the count of playlists, since that's what we asked for.
   // so, let's start printing out their names
   advancedRemote.getItemNames(AdvancedRemote::ITEM_PLAYLIST, 0, playlistCount);
@@ -97,7 +97,7 @@ void itemNameHandler(unsigned long offset, const char *name)
   Serial.print(" is named '");
   Serial.print(name);
   Serial.println("'");
-  
+
   if (offset == playlistCount - 1)
   {
     Serial.println("Got last playlist name, coming out of advanced mode");
@@ -130,6 +130,9 @@ void setup()
 
   // let the library set itself up, now we've done our configuration of it
   advancedRemote.setup();
+
+  // start disabled, i.e. in good old Simple Remote mode
+  advancedRemote.disable();
 }
 
 void loop()
@@ -156,6 +159,7 @@ void loop()
     }
   }
 }
+
 
 
 

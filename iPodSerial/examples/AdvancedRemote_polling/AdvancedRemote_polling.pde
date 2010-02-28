@@ -27,11 +27,11 @@
 // then goes into polling mode, where the iPod sends back elapsed time
 // information every 500ms.
 //
-// WARNING:
-// Note that this example could leave your iPod in Advanced Mode, which puts your
-// iPod's screen into "OK to disconnect" mode. It should come back out of that
-// mode after a few seconds, but if not you can power it off and back on,
-// or send it a command to go back into Simple Remote mode.
+// If your iPod ends up stuck with the "OK to disconnect" message on its display,
+// reset the Arduino. There's a called to AdvancedRemote::disable() in the setup()
+// function which should put the iPod back to its normal mode. If that doesn't
+// work, or you are unable to reset your Arduino for some reason, resetting the
+// iPod will put it back to its normal mode.
 
 #include <AdvancedRemote.h>
 #include <Bounce.h>
