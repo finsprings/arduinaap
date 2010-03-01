@@ -69,7 +69,10 @@ getRepeatMode	KEYWORD2
 setRepeatMode	KEYWORD2
 getSongCountInCurrentPlaylist	KEYWORD2
 jumpToSongInCurrentPlaylist	KEYWORD2
-
+setDebugPrint	KEYWORD2
+setLogPrint	KEYWORD2
+loop	KEYWORD2
+setSerial	KEYWORD2
 #######################################
 # Instances (KEYWORD2)
 #######################################
@@ -124,4 +127,3 @@ CMD_GET_REPEAT_MODE	LITERAL1
 CMD_SET_REPEAT_MODE	LITERAL1
 CMD_GET_SONG_COUNT_IN_CURRENT_PLAYLIST	LITERAL1
 CMD_JUMP_TO_SONG_IN_CURRENT_PLAYLIST	LITERAL1
-
