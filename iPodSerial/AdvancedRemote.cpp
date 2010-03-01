@@ -148,7 +148,7 @@ void AdvancedRemote::getItemCount(AdvancedRemote::ItemType itemType)
 void AdvancedRemote::getItemNames(AdvancedRemote::ItemType itemType, unsigned long offset, unsigned long count)
 {
     log("getItemNames");
-     sendCommandWithOneByteAndTwoNumberParams(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_ITEM_NAMES, itemType, offset, count);
+    sendCommandWithOneByteAndTwoNumberParams(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_ITEM_NAMES, itemType, offset, count);
 }
 
 void AdvancedRemote::getTimeAndStatusInfo()
