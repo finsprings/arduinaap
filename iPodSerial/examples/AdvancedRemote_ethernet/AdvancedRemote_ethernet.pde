@@ -23,6 +23,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
+// NOTE: This sketch is still a work-in-progress.
+// I'm encountering RAM issues with it: it won't work at all on a 168 and
+// is a flakey on a 328 even. I'd try it on my Arduino Mega but the Ethernet
+// Shield doesn't work on the Mega without modification because the SPI pins
+// aren't in the same place.
+
 // Example of Advanced Remote (Mode 4) that picks a track, starts it playing
 // then goes into polling mode, where the iPod sends back elapsed time
 // information every 500ms.
