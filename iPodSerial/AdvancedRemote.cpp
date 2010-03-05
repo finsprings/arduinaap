@@ -109,123 +109,163 @@ void AdvancedRemote::setCurrentPlaylistSongCountHandler(CurrentPlaylistSongCount
 
 void AdvancedRemote::enable()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("enabling advanced remote mode");
+#endif
     sendCommand(MODE_SWITCHING_MODE, 0x01, ADVANCED_REMOTE_MODE);
     currentlyEnabled = true; // strictly it's not until we get feedback of success
 }
 
 void AdvancedRemote::disable()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("disabling advanced remote mode");
+#endif
     sendCommand(MODE_SWITCHING_MODE, 0x01, SIMPLE_REMOTE_MODE);
     currentlyEnabled = false; // strictly it's not until we get feedback of success
 }
 
 void AdvancedRemote::getiPodName()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getiPodName");
+#endif
     sendCommand(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_IPOD_NAME);
 }
 
 void AdvancedRemote::switchToMainLibraryPlaylist()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("switchToMainLibraryPlaylist");
+#endif
     sendCommand(ADVANCED_REMOTE_MODE, 0x00, CMD_SWITCH_TO_MAIN_LIBRARY_PLAYLIST);
 }
 
 void AdvancedRemote::switchToItem(AdvancedRemote::ItemType itemType, long index)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("switchToItem");
+#endif
     sendCommandWithOneByteAndOneNumberParam(ADVANCED_REMOTE_MODE, 0x00, CMD_SWITCH_TO_ITEM, itemType, index);
 }
 
 void AdvancedRemote::getItemCount(AdvancedRemote::ItemType itemType)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getItemCount");
+#endif
     sendCommandWithOneByteParam(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_ITEM_COUNT, itemType);
 }
 
 void AdvancedRemote::getItemNames(AdvancedRemote::ItemType itemType, unsigned long offset, unsigned long count)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getItemNames");
+#endif
     sendCommandWithOneByteAndTwoNumberParams(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_ITEM_NAMES, itemType, offset, count);
 }
 
 void AdvancedRemote::getTimeAndStatusInfo()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getTimeAndStatusInfo");
+#endif
     sendCommand(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_TIME_AND_STATUS_INFO);
 }
 
 void AdvancedRemote::getPlaylistPosition()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getPlaylistPosition");
+#endif
     sendCommand(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_PLAYLIST_POSITION);
 }
 
 void AdvancedRemote::getTitle(unsigned long index)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getTitle");
+#endif
     sendCommandWithOneNumberParam(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_TITLE, index);
 }
 
 void AdvancedRemote::getArtist(unsigned long index)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getArtist");
+#endif
     sendCommandWithOneNumberParam(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_ARTIST, index);
 }
 
 void AdvancedRemote::getAlbum(unsigned long index)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getAlbum");
+#endif
     sendCommandWithOneNumberParam(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_ALBUM, index);
 }
 
 void AdvancedRemote::setPollingMode(AdvancedRemote::PollingMode newMode)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("setPollingMode");
+#endif
     sendCommandWithOneByteParam(ADVANCED_REMOTE_MODE, 0x00, CMD_POLLING_MODE, newMode);
 }
 
 void AdvancedRemote::controlPlayback(AdvancedRemote::PlaybackControl command)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("controlPlayback");
+#endif
     sendCommandWithOneByteParam(ADVANCED_REMOTE_MODE, 0x00, CMD_PLAYBACK_CONTROL, command);
 }
 
 void AdvancedRemote::getShuffleMode()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getShuffleMode");
+#endif
     sendCommand(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_SHUFFLE_MODE);
 }
 
 void AdvancedRemote::setShuffleMode(AdvancedRemote::ShuffleMode newMode)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("setShuffleMode");
+#endif
     sendCommandWithOneByteParam(ADVANCED_REMOTE_MODE, 0x00, CMD_SET_SHUFFLE_MODE, newMode);
 }
 
 void AdvancedRemote::getRepeatMode()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getRepeatMode");
+#endif
     sendCommand(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_REPEAT_MODE);
 }
 
 void AdvancedRemote::setRepeatMode(AdvancedRemote::RepeatMode newMode)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("setRepeatMode");
+#endif
     sendCommandWithOneByteParam(ADVANCED_REMOTE_MODE, 0x00, CMD_SET_REPEAT_MODE, newMode);
 }
 
 void AdvancedRemote::getSongCountInCurrentPlaylist()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("getSongCountInCurrentPlaylist");
+#endif
     sendCommand(ADVANCED_REMOTE_MODE, 0x00, CMD_GET_SONG_COUNT_IN_CURRENT_PLAYLIST);
 }
 
 void AdvancedRemote::jumpToSongInCurrentPlaylist(unsigned long index)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     log("jumpToSongInCurrentPlaylist");
+#endif
     sendCommandWithOneNumberParam(ADVANCED_REMOTE_MODE, 0x00, CMD_JUMP_TO_SONG_IN_CURRENT_PLAYLIST, index);
 }
 
@@ -234,24 +274,26 @@ void AdvancedRemote::processData()
     const byte mode = dataBuffer[0];
     if (mode != ADVANCED_REMOTE_MODE)
     {
+#if defined(IPOD_SERIAL_DEBUG)
         if (pDebugPrint)
         {
             pDebugPrint->println("response not for adv mode so ignoring");
             dumpReceive();
         }
-
+#endif
         return;
     }
 
     const byte firstCommandByte = dataBuffer[1];
     if (firstCommandByte != 0x00)
     {
+#if defined(IPOD_SERIAL_DEBUG)
         if (pDebugPrint)
         {
             pDebugPrint->println("1st cmd byte in response not 0x00 so ignoring");
             dumpReceive();
         }
-
+#endif
         return;
     }
 
@@ -259,6 +301,7 @@ void AdvancedRemote::processData()
     switch (secondCommandByte)
     {
     case RESPONSE_BAD:
+#if defined(IPOD_SERIAL_DEBUG)
         if (pDebugPrint)
         {
             pDebugPrint->print("BAD Response: Result=0x");
@@ -268,6 +311,7 @@ void AdvancedRemote::processData()
             pDebugPrint->print(", 0x");
             pDebugPrint->println(dataBuffer[5], HEX);
         }
+#endif
         return;
 
     case RESPONSE_FEEDBACK:
@@ -278,6 +322,7 @@ void AdvancedRemote::processData()
          * 4=you exceeded the limit of whatever you were requesting/wrong parameter-count,
          * 5=sent an iPod Response instead of a command
          */
+#if defined(IPOD_SERIAL_DEBUG)
         if (pDebugPrint)
         {
             pDebugPrint->print("Feedback Response: Result=0x");
@@ -287,7 +332,7 @@ void AdvancedRemote::processData()
             pDebugPrint->print(", 0x");
             pDebugPrint->println(dataBuffer[5], HEX);
         }
-
+#endif
         if (pFeedbackHandler)
         {
             const Feedback feedback = (Feedback) dataBuffer[3];
@@ -398,6 +443,7 @@ void AdvancedRemote::processData()
         }
         break;
 
+#if defined(IPOD_SERIAL_DEBUG)
     default:
         if (pDebugPrint)
         {
@@ -405,6 +451,7 @@ void AdvancedRemote::processData()
             dumpReceive();
         }
         break;
+#endif
     }
 }
 

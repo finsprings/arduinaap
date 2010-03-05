@@ -62,6 +62,7 @@ public:
      */
     void setSerial(HardwareSerial &newiPodSerial);
 
+#if defined(IPOD_SERIAL_DEBUG)
     /**
      * Sets the Print object to which debug messages will be directed.
      * By default there isn't one and so debug messages are off.
@@ -73,6 +74,7 @@ public:
      * By default there isn't one and so log messages are off.
      */
     void setLogPrint(Print &newLogSerial);
+#endif
 
 protected: // attributes
     static const byte MODE_SWITCHING_MODE = 0x00;
@@ -80,17 +82,21 @@ protected: // attributes
     static const byte ADVANCED_REMOTE_MODE = 0x04;
 
     byte dataSize;
-    byte dataBuffer[128];
+    byte dataBuffer[128]; // TODO: Why did I pick 128?
+#if defined(IPOD_SERIAL_DEBUG)
     Print *pDebugPrint;
     Print *pLogPrint;
+#endif
 
 protected: // methods
+#if defined(IPOD_SERIAL_DEBUG)
     /**
      * convenience function to print out a debug message
      */
     void log(const char *);
 
     void dumpReceive();
+#endif
 
     /*
      * Different flavours of command-sending method to keep

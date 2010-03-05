@@ -39,9 +39,12 @@ iPodSerial::iPodSerial()
       dataSize(0),
       pData(0),
       checksum(0),
-      pSerial(&Serial), // default to regular serial port as that's all most Arduinos have
+      pSerial(&Serial) // default to regular serial port as that's all most Arduinos have
+#if defined(IPOD_SERIAL_DEBUG)
+    ,
       pDebugPrint(0),   // default to no debug, since most Arduinos don't have a spare serial to use for debug
       pLogPrint(0)      // default to no log, since most Arduinos don't have a spare serial to use for debug
+#endif
 {
 }
 
@@ -50,6 +53,7 @@ void iPodSerial::setSerial(HardwareSerial &newiPodSerial)
     pSerial = &newiPodSerial;
 }
 
+#if defined(IPOD_SERIAL_DEBUG)
 void iPodSerial::setDebugPrint(Print &newPrint)
 {
     pDebugPrint = &newPrint;
@@ -65,6 +69,7 @@ void iPodSerial::setLogPrint(Print &newPrint)
         pDebugPrint->println("Debug Print now set");
     }
 }
+#endif
 
 void iPodSerial::setup()
 {
@@ -87,6 +92,7 @@ bool iPodSerial::validChecksum(byte actual)
     }
     else
     {
+#if defined(IPOD_SERIAL_DEBUG)
         if (pDebugPrint)
         {
             pDebugPrint->print("checksum mismatch: expected ");
@@ -94,11 +100,13 @@ bool iPodSerial::validChecksum(byte actual)
             pDebugPrint->print(" but got ");
             pDebugPrint->println(actual, HEX);
         }
+#endif
 
         return false;
     }
 }
 
+#if defined(IPOD_SERIAL_DEBUG)
 void iPodSerial::dumpReceive()
 {
     if (!pDebugPrint)
@@ -117,6 +125,7 @@ void iPodSerial::dumpReceive()
         pDebugPrint->println(dataBuffer[i], HEX);
     }
 }
+#endif
 
 void iPodSerial::processResponse()
 {
@@ -128,6 +137,8 @@ void iPodSerial::processResponse()
 
     // read a single byte from the iPod
     const int b = pSerial->read();
+
+#if defined(IPOD_SERIAL_DEBUG)
     if (pDebugPrint)
     {
         pDebugPrint->print("Receive Status: ");
@@ -142,6 +153,7 @@ void iPodSerial::processResponse()
         }
         pDebugPrint->println();
     }
+#endif
 
     switch (receiveState)
     {
@@ -163,11 +175,13 @@ void iPodSerial::processResponse()
         dataSize = b;
         pData = dataBuffer;
         receiveState = WAITING_FOR_DATA;
+#if defined(IPOD_SERIAL_DEBUG)
         if (pDebugPrint)
         {
             pDebugPrint->print("Data length is ");
             pDebugPrint->println(dataSize, DEC);
         }
+#endif
         break;
 
     case WAITING_FOR_DATA:
@@ -177,6 +191,7 @@ void iPodSerial::processResponse()
         {
             receiveState = WAITING_FOR_CHECKSUM;
         }
+#if defined(IPOD_SERIAL_DEBUG)
         else
         {
             if (pDebugPrint)
@@ -185,6 +200,7 @@ void iPodSerial::processResponse()
                 pDebugPrint->println(dataSize - (pData - dataBuffer));
             }
         }
+#endif
         break;
 
     case WAITING_FOR_CHECKSUM:
@@ -202,11 +218,13 @@ void iPodSerial::sendCommandWithLength(
     size_t length,
     const byte *pData)
 {
+#if defined(IPOD_SERIAL_DEBUG)
     if (pDebugPrint)
     {
         pDebugPrint->print("Sending command of length: ");
         pDebugPrint->println(length, DEC);
     }
+#endif
 
     sendHeader();
     sendLength(length);
@@ -318,12 +336,14 @@ void iPodSerial::sendByte(byte b)
     pSerial->print(b, BYTE);
     checksum += b;
 
+#if defined(IPOD_SERIAL_DEBUG)
     // likely to slow stuff down!
     if (pDebugPrint)
     {
         pDebugPrint->print("sent byte ");
         pDebugPrint->println(b, HEX);
     }
+#endif
 }
 
 void iPodSerial::sendParam(unsigned long param)
@@ -350,13 +370,16 @@ void iPodSerial::loop()
 
 void iPodSerial::processData()
 {
+#if defined(IPOD_SERIAL_DEBUG)
     if (pDebugPrint)
     {
         pDebugPrint->println("Ignoring data from iPod:");
         dumpReceive();
     }
+#endif
 }
 
+#if defined(IPOD_SERIAL_DEBUG)
 void iPodSerial::log(const char *message)
 {
     if (pLogPrint)
@@ -364,3 +387,4 @@ void iPodSerial::log(const char *message)
         pLogPrint->println(message);
     }
 }
+#endif

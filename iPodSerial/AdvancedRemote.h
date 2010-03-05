@@ -308,7 +308,7 @@ private: // attributes
 
 private: // methods
     virtual void processData();
-    unsigned long endianConvert(const byte *p);
+    static unsigned long endianConvert(const byte *p);
 };
 
 #endif // ADVANCED_REMOTE
