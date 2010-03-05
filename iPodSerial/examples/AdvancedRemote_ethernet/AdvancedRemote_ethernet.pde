@@ -1,12 +1,7 @@
 // NOTE: This sketch is still a work-in-progress.
-// I'm encountering RAM issues with it: it won't work at all on a 168 and
-// is a flakey on a 328 even. I'd try it on my Arduino Mega but the Ethernet
-// Shield doesn't work on the Mega without modification because the SPI pins
-// aren't in the same place.
 
-// Example of Advanced Remote (Mode 4) that picks a track, starts it playing
-// then goes into polling mode, where the iPod sends back elapsed time
-// information every 500ms.
+// Example of Advanced Remote that exposes an ethernet command interface.
+// Look at the clientLoop() function to see what it understands.
 //
 // If your iPod ends up stuck with the "OK to disconnect" message on its display,
 // reset the Arduino. There's a called to AdvancedRemote::disable() in the setup()
@@ -94,7 +89,7 @@ void albumHandler(const char *name)
 
 void currentPlaylistSongCountHandler(unsigned long count)
 {
-  c.print("{\"playlist-song-count\": ");
+  c.print("{\"pl-song-count\": ");
   c.print(count, DEC);
   c.println("}");
 }
@@ -103,12 +98,12 @@ void pollingHandler(unsigned long elapsedTimeMs)
 {
   c.print("{\"poll\": ");
   c.print(elapsedTimeMs, DEC);
-  c.print("}");
+  c.println("}");
 }
 
 void playlistPositionHandler(unsigned long index)
 {
-  c.print("{\"playlist-position\": ");
+  c.print("{\"pl-position\": ");
   c.print(index, DEC);
   c.println("}");
 }
@@ -206,7 +201,7 @@ void clientLoop()
     ar.getiPodName();
   }
   /*
-  else if (strcmp(cmd, "switch-main-playlist") == 0)
+  else if (strcmp(cmd, "s-main-pl") == 0)
   {
     ar.switchToMainLibraryPlaylist();
   } 
@@ -214,103 +209,96 @@ void clientLoop()
   //
   // item switchers
   //
-  else if ((index = getIndex(cmd, "switch-playlist-")) != -1)
+  else if ((index = getIndex(cmd, "s-pl-")) != -1)
   {
     ar.switchToItem(AdvancedRemote::ITEM_PLAYLIST, index);
   }
-  /*
-  else if ((index = getIndex(cmd, "switch-artist-")) != -1)
+  else if ((index = getIndex(cmd, "s-artist-")) != -1)
   {
     ar.switchToItem(AdvancedRemote::ITEM_ARTIST, index);
   }
-  else if ((index = getIndex(cmd, "switch-album-")) != -1)
+  else if ((index = getIndex(cmd, "s-album-")) != -1)
   {
     ar.switchToItem(AdvancedRemote::ITEM_ALBUM, index);
   }
-  else if ((index = getIndex(cmd, "switch-genre-")) != -1)
+  else if ((index = getIndex(cmd, "s-genre-")) != -1)
   {
     ar.switchToItem(AdvancedRemote::ITEM_GENRE, index);
   }
-
-  else if ((index = getIndex(cmd, "switch-song-")) != -1)
+  else if ((index = getIndex(cmd, "s-song-")) != -1)
   {
     ar.switchToItem(AdvancedRemote::ITEM_SONG, index);
   }
-  else if ((index = getIndex(cmd, "switch-composer-")) != -1)
+  else if ((index = getIndex(cmd, "s-composer-")) != -1)
   {
     ar.switchToItem(AdvancedRemote::ITEM_COMPOSER, index);
   }
-  */
   //
   // item counts
   //
-  else if (strcmp(cmd, "get-playlist-count") == 0)
+  else if (strcmp(cmd, "g-pl-count") == 0)
   {
     ar.getItemCount(AdvancedRemote::ITEM_PLAYLIST);
   }    
-  /*
-  else if (strcmp(cmd, "get-artist-count") == 0)
+  else if (strcmp(cmd, "g-artist-count") == 0)
   {
     ar.getItemCount(AdvancedRemote::ITEM_ARTIST);
   }    
-  else if (strcmp(cmd, "get-album-count") == 0)
+  else if (strcmp(cmd, "g-album-count") == 0)
   {
     ar.getItemCount(AdvancedRemote::ITEM_ALBUM);
   }    
-  else if (strcmp(cmd, "get-genre-count") == 0)
+  else if (strcmp(cmd, "g-genre-count") == 0)
   {
     ar.getItemCount(AdvancedRemote::ITEM_GENRE);
   }    
-  else if (strcmp(cmd, "get-song-count") == 0)
+  else if (strcmp(cmd, "g-song-count") == 0)
   {
     ar.getItemCount(AdvancedRemote::ITEM_SONG);
   }    
-  else if (strcmp(cmd, "get-composer-count") == 0)
+  else if (strcmp(cmd, "g-composer-count") == 0)
   {
     ar.getItemCount(AdvancedRemote::ITEM_COMPOSER);
   }
-  */
   //
   // item names
   //
-  else if ((index = getIndex(cmd, "get-playlist-name-")) != -1)
+  else if ((index = getIndex(cmd, "g-pl-name-")) != -1)
   {
     ar.getItemNames(AdvancedRemote::ITEM_PLAYLIST, index, 1);
   }
-  /*
-  else if ((index = getIndex(cmd, "get-artist-name-")) != -1)
+  else if ((index = getIndex(cmd, "g-artist-name-")) != -1)
   {
     ar.getItemNames(AdvancedRemote::ITEM_ARTIST, index, 1);
   }
-  else if ((index = getIndex(cmd, "get-album-name-")) != -1)
+  else if ((index = getIndex(cmd, "g-album-name-")) != -1)
   {
     ar.getItemNames(AdvancedRemote::ITEM_ALBUM, index, 1);
   }
-  else if ((index = getIndex(cmd, "get-genre-name-")) != -1)
+  else if ((index = getIndex(cmd, "g-genre-name-")) != -1)
   {
     ar.getItemNames(AdvancedRemote::ITEM_GENRE, index, 1);
   }
-  else if ((index = getIndex(cmd, "get-song-name-")) != -1)
+  else if ((index = getIndex(cmd, "g-song-name-")) != -1)
   {
     ar.getItemNames(AdvancedRemote::ITEM_SONG, index, 1);
   }
-  else if ((index = getIndex(cmd, "get-composer-name-")) != -1)
+  else if ((index = getIndex(cmd, "g-composer-name-")) != -1)
   {
     ar.getItemNames(AdvancedRemote::ITEM_COMPOSER, index, 1);
   }
-  */
   //
   // Misc
   //
-  else if (strcmp(cmd, "get-status") == 0)
+  else if (strcmp(cmd, "g-status") == 0)
   {
     ar.getTimeAndStatusInfo();
   }    
-  else if (strcmp(cmd, "get-playlist-song-count") == 0)
+  else if (strcmp(cmd, "g-pl-song-count") == 0)
   {
     ar.getSongCountInCurrentPlaylist();
   }    
-  else if (strcmp(cmd, "get-playlist-position") == 0)
+  else if (strcmp(cmd, "g-pl-position") == 0)
   {
     ar.getPlaylistPosition();
   }    
@@ -318,13 +306,21 @@ void clientLoop()
   {
     ar.jumpToSongInCurrentPlaylist(index);
   }    
-  else if (strcmp(cmd, "play-pause") == 0)
+  else if (strcmp(cmd, "play") == 0)
   {
     ar.controlPlayback(AdvancedRemote::PLAYBACK_CONTROL_PLAY_PAUSE);
   }    
   else if (strcmp(cmd, "stop") == 0)
   {
     ar.controlPlayback(AdvancedRemote::PLAYBACK_CONTROL_STOP);
+  }    
+  else if (strcmp(cmd, "poll-start") == 0)
+  {
+    ar.setPollingMode(AdvancedRemote::POLLING_START);
+  }    
+  else if (strcmp(cmd, "poll-stop") == 0)
+  {
+    ar.setPollingMode(AdvancedRemote::POLLING_STOP);
   }    
   else
   {
