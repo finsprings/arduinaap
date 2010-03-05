@@ -16,20 +16,9 @@ SimpleRemote simpleRemote;
 void setup()
 {
   pinMode(BUTTON_PIN, INPUT);
-  
+
   // enable pull-up
   digitalWrite(BUTTON_PIN, HIGH);
-  
-  // if you're using a Mega you could talk to the iPod
-  // on Serial3 and turn on debugging messages
-  // to Serial (i.e. back to the Arduino IDE) with
-  // the following three lines. Obviously for this to
-  // work you'll actually need to wire the iPod serial
-  // lines up to Serial3...
-  //
-  //simpleRemote.setSerial(Serial3);
-  //Serial.begin(9600);
-  //simpleRemote.setDebugPrint(Serial);
 
   simpleRemote.setup();
 }

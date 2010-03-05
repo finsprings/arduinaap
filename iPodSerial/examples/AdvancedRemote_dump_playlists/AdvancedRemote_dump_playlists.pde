@@ -80,6 +80,9 @@ void setup()
 
   Serial.begin(9600);
 
+  // enable debugging
+  // #define IPOD_SERIAL_DEBUG
+
   // direct library's log msgs to the default serial port
   //advancedRemote.setLogPrint(Serial);
 
