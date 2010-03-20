@@ -99,6 +99,7 @@ public: // enums
     static const byte CMD_GET_ARTIST = 0x22;
     static const byte CMD_GET_ALBUM = 0x24;
     static const byte CMD_POLLING_MODE = 0x26;
+    static const byte CMD_EXECUTE_SWITCH = 0x28;
     static const byte CMD_PLAYBACK_CONTROL = 0x29;
     static const byte CMD_GET_SHUFFLE_MODE = 0x2C;
     static const byte CMD_SET_SHUFFLE_MODE = 0x2E;
@@ -180,6 +181,9 @@ public: // methods
 
     /**
      * Switch to the item identified by the type and index given.
+     * This is the equivalent of drilling down from the Music
+     * menu to the item specified. If you want to select the item
+     * for playing you then need to call executeSwitch()
      */
     void switchToItem(ItemType itemType, long index);
 
@@ -187,16 +191,25 @@ public: // methods
      * Get the total number of items of the specified type.
      * The response will be sent to the ItemCountHandler, if one
      * has been registered (otherwise it will be ignored).
+     * The value returned is in the context of the currently
+     * selected playlist (except when you're asking for the count
+     * of playlists, obviously).
+     * The count returned is in the context of the mostly-recently
+     * selected playlist (via switchToItem). The playlist doesn't
+     * have to also have been executeSwitch()'d to however.
      */
     void getItemCount(ItemType itemType);
 
     /**
      * Get the names of a range of items.
      * offset is the starting item (starts at 0, not 1)
+     * The offset is in the context of the mostly-recently
+     * selected playlist (via switchToItem). The playlist doesn't
+     * have to also have been executeSwitch()'d to however.
      */
     void getItemNames(ItemType itemType, unsigned long offset, unsigned long count);
 
-    /**
+     /**
      * Ask the iPod for time and playback status information.
      * The response will be sent to the TimeAndStatusHandler, if one
      * has been registered (otherwise it will be ignored).
@@ -207,6 +220,9 @@ public: // methods
      * Ask the iPod for the current position in the current playlist.
      * The response will be sent to the PlaylistPositionHandler, if one
      * has been registered (otherwise it will be ignored).
+     * The current playlist is the one last selected via executeSwitch
+     * or via the iPod's controls - call switchToItem for a playlist is
+     * not enough.
      */
     void getPlaylistPosition();
 
@@ -214,6 +230,9 @@ public: // methods
      * ask the iPod for the title of a track.
      * The response will be sent to the TitleHandler, if one
      * has been registered (otherwise it will be ignored).
+     * The count returned is in the context of the mostly-recently
+     * selected playlist (via switchToItem). The playlist doesn't
+     * have to also have been executeSwitch()'d to however.
      */
     void getTitle(unsigned long index);
 
@@ -221,6 +240,9 @@ public: // methods
      * ask the iPod for the artist for a track.
      * The response will be sent to the ArtistHandler, if one
      * has been registered (otherwise it will be ignored).
+     * The count returned is in the context of the mostly-recently
+     * selected playlist (via switchToItem). The playlist doesn't
+     * have to also have been executeSwitch()'d to however.
      */
     void getArtist(unsigned long index);
 
@@ -228,6 +250,9 @@ public: // methods
      * ask the iPod for the album for a track.
      * The response will be sent to the AlbumHandler, if one
      * has been registered (otherwise it will be ignored).
+     * The count returned is in the context of the mostly-recently
+     * selected playlist (via switchToItem). The playlist doesn't
+     * have to also have been executeSwitch()'d to however.
      */
     void getAlbum(unsigned long index);
 
@@ -238,6 +263,15 @@ public: // methods
      * has been registered (otherwise they will be ignored).
      */
     void setPollingMode(PollingMode newMode);
+
+    /**
+     * Execute Playlist-switch specified in last setItem call, and jump to specified number
+     * in the playlist (0xFFFFFFFF means start at the beginning of the playlist, even when
+     * shuffled). After this call getSongCountInCurrentPlaylist(), getPlaylistPosition()
+     * and jumpToSongInCurrentPlaylist() will be in the context of this newly-switched-to
+     * playlist.
+     */
+    void executeSwitch(unsigned long index);
 
     /**
      * Control playback (play/pause, etc)
@@ -272,11 +306,17 @@ public: // methods
      * Get the count of songs in the current playlist.
      * The response will be sent to the CurrentPlaylistSongCountHandler, if one
      * has been registered (otherwise it will be ignored).
+     * The current playlist is the one last selected via executeSwitch
+     * or via the iPod's controls - call switchToItem for a playlist is
+     * not enough.
      */
     void getSongCountInCurrentPlaylist();
 
     /**
      * Jump to the specified song in the current playlist.
+     * The current playlist is the one last selected via executeSwitch
+     * or via the iPod's controls - call switchToItem for a playlist is
+     * not enough.
      */
     void jumpToSongInCurrentPlaylist(unsigned long index);
 

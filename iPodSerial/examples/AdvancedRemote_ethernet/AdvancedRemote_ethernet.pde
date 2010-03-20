@@ -322,6 +322,26 @@ void clientLoop()
   {
     ar.setPollingMode(AdvancedRemote::POLLING_STOP);
   }    
+  else if ((index = getIndex(cmd, "switch-")) != -1)
+  {
+    ar.executeSwitch(index);
+  }
+  else if (strcmp(cmd, "switch") == 0)
+  {
+    ar.executeSwitch(0xFFFFFFFF);
+  }
+  else if ((index = getIndex(cmd, "pl-info-")) != -1)
+  {
+    ar.getItemNames(AdvancedRemote::ITEM_PLAYLIST, index, 1);
+    ar.switchToItem(AdvancedRemote::ITEM_PLAYLIST, index);
+    ar.getSongCountInCurrentPlaylist();
+    ar.getPlaylistPosition();
+    ar.getItemCount(AdvancedRemote::ITEM_ARTIST);
+    ar.getItemCount(AdvancedRemote::ITEM_ALBUM);
+    ar.getItemCount(AdvancedRemote::ITEM_SONG);
+    ar.getItemCount(AdvancedRemote::ITEM_GENRE);
+    ar.getItemCount(AdvancedRemote::ITEM_COMPOSER);
+  }
   else
   {
     c.println("{\"huh\"}");

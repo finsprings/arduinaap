@@ -213,6 +213,14 @@ void AdvancedRemote::setPollingMode(AdvancedRemote::PollingMode newMode)
     sendCommandWithOneByteParam(ADVANCED_REMOTE_MODE, 0x00, CMD_POLLING_MODE, newMode);
 }
 
+void AdvancedRemote::executeSwitch(unsigned long index)
+{
+#if defined(IPOD_SERIAL_DEBUG)
+    log("executeSwitch");
+#endif
+    sendCommandWithOneNumberParam(ADVANCED_REMOTE_MODE, 0x00, CMD_EXECUTE_SWITCH, index);
+}
+
 void AdvancedRemote::controlPlayback(AdvancedRemote::PlaybackControl command)
 {
 #if defined(IPOD_SERIAL_DEBUG)
