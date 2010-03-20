@@ -271,7 +271,7 @@ void iPodSerial::sendCommandWithOneNumberParam(
     sendByte(mode);
     sendByte(cmdByte1);
     sendByte(cmdByte2);
-    sendParam(numberParam);
+    sendNumber(numberParam);
     sendChecksum();
 }
 
@@ -288,7 +288,7 @@ void iPodSerial::sendCommandWithOneByteAndOneNumberParam(
     sendByte(cmdByte1);
     sendByte(cmdByte2);
     sendByte(byteParam1);
-    sendParam(numberParam2);
+    sendNumber(numberParam2);
     sendChecksum();
 }
 
@@ -306,8 +306,8 @@ void iPodSerial::sendCommandWithOneByteAndTwoNumberParams(
     sendByte(cmdByte1);
     sendByte(cmdByte2);
     sendByte(byteParam1);
-    sendParam(numberParam2);
-    sendParam(numberParam3);
+    sendNumber(numberParam2);
+    sendNumber(numberParam3);
     sendChecksum();
 }
 
@@ -346,13 +346,13 @@ void iPodSerial::sendByte(byte b)
 #endif
 }
 
-void iPodSerial::sendParam(unsigned long param)
+void iPodSerial::sendNumber(unsigned long n)
 {
     // parameter (4-byte int sent big-endian)
-    sendByte((param & 0xFF000000) >> 3);
-    sendByte((param & 0x00FF0000) >> 2);
-    sendByte((param & 0x0000FF00) >> 1);
-    sendByte((param & 0x000000FF) >> 0);
+    sendByte((n & 0xFF000000) >> 24);
+    sendByte((n & 0x00FF0000) >> 16);
+    sendByte((n & 0x0000FF00) >> 8);
+    sendByte((n & 0x000000FF) >> 0);
 }
 
 void iPodSerial::sendChecksum()

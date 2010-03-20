@@ -158,7 +158,7 @@ private: // methods
     void sendLength(size_t length);
     void sendBytes(size_t length, const byte *pData);
     void sendByte(byte b);
-    void sendParam(unsigned long param);
+    void sendNumber(unsigned long n);
     void sendChecksum();
     bool validChecksum(const byte actual);
     void processResponse();
