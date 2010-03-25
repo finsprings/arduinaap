@@ -328,6 +328,7 @@ void clientLoop()
   }
   else if (strcmp(cmd, "switch") == 0)
   {
+    // send the index that means 'first track no matter the shuffle order'
     ar.executeSwitch(0xFFFFFFFF);
   }
   else if ((index = getIndex(cmd, "pl-info-")) != -1)
@@ -407,25 +408,3 @@ void loop()
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
