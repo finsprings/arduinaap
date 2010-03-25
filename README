@@ -1,6 +1,6 @@
 ArduinAAP (Arduino Apple Accessory Protocol) provides the iPodSerial Arduino library.
 
-This library lets an Arduino interact with an iPod, or the iPod application on the iPhone and iPod Touch,  via the serial AAP protocol through the iPod's dock connector.
+This library lets an Arduino interact with an iPod, or some features of the iPod application on the iPhone and iPod Touch*,  via the serial AAP protocol through the iPod's dock connector.
 
 See http://ipodlinux.org/wiki/Apple_Accessory_Protocol for more details of AAP. I used http://nuxx.net/wiki/Apple_Accessory_Protocol during development but it seems to be stale now. The ipodlinux.org one has the correct format of the Advanced Remote polling response, for example, and the nuxx.net version does not.
 
@@ -15,3 +15,5 @@ The SimpleRemote class implements AAP Mode 2, aka iPod Remote, aka Simple Remote
 The AdvancedRemote class implements AAP Mode 4, aka Advanced Remote. Be aware that in Advanced Remote mode the iPod will display a large checkmark and the message "OK to disconnect"; in this mode you cannot control the iPod via its own interface so you need to do everything from your Arduino sketch. Advanced Remote has more options though, like being able to put the iPod in polling mode, where it will send you back the currently-playing track's elapsed time every 500ms; you could use this to update a display controlled by your Arduino (I'm thinking nixie tubes with the arduinix shield would be cool!).
 
 NOTE: When connecting your iPod to your Arduino, please double-check your wiring. iPods are expensive and you don't want to break yours by sending it too high a voltage or whatever. You use this library at your own risk etc.
+
+* On my iPhone 3GS and my wife's iPhone 3G I get the "This accessory is not made to work with iPhone" popup and occasionally the longer error message that asks if you want to put it into Airplane mode. Advanced Mode commands don't work. Simple Remote commands do seem to work fine though.
