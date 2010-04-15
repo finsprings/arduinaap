@@ -29,6 +29,12 @@ void loop()
 
   if (button.update())
   {
+    // prod the iPod in case it went to sleep since we last talked to it
+    // (after which older iPods will stop responding to us otherwise)
+    simpleRemote.sendiPodOn();
+    delay(50);
+    simpleRemote.sendButtonReleased();
+
     if (button.read() == LOW)
     {
       simpleRemote.sendPlay();
@@ -39,4 +45,6 @@ void loop()
     }
   }
 }
+
+
 
