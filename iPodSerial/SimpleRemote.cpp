@@ -24,6 +24,11 @@
  ******************************************************************************/
 #include "SimpleRemote.h"
 
+SimpleRemote::SimpleRemote(HardwareSerial &serial)
+    : iPodSerial(serial)
+{
+}
+
 void SimpleRemote::sendButtonReleased()
 {
     static const byte button_released[] = {SIMPLE_REMOTE_MODE, 0x00, 0x00};

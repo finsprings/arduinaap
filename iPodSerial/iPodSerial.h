@@ -35,7 +35,7 @@
 class iPodSerial
 {
 public:
-    iPodSerial();
+    iPodSerial(HardwareSerial &serial);
 
     /**
      * Initializes the library.

@@ -34,12 +34,12 @@ static const char *STATE_NAME[] =
     "Waiting for checksum"
 };
 
-iPodSerial::iPodSerial()
+iPodSerial::iPodSerial(HardwareSerial &serial)
     : receiveState(WAITING_FOR_HEADER1),
       dataSize(0),
       pData(0),
       checksum(0),
-      pSerial(&Serial) // default to regular serial port as that's all most Arduinos have
+      pSerial(&serial) // default to regular serial port as that's all most Arduinos have
 #if defined(IPOD_SERIAL_DEBUG)
     ,
       pDebugPrint(0),   // default to no debug, since most Arduinos don't have a spare serial to use for debug

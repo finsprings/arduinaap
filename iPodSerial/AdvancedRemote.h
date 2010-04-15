@@ -143,7 +143,7 @@ public: // handler setting methods; you probably want to call these from init()
 
 
 public: // methods
-    AdvancedRemote();
+    AdvancedRemote(HardwareSerial &iPodSerial);
 
     /**
      * Turn on Advanced Remote mode. This causes the iPod to

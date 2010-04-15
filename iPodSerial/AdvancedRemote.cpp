@@ -24,8 +24,9 @@
  ******************************************************************************/
 #include "AdvancedRemote.h"
 
-AdvancedRemote::AdvancedRemote()
-    : pFeedbackHandler(0),
+AdvancedRemote::AdvancedRemote(HardwareSerial &serial)
+    : iPodSerial(serial),
+      pFeedbackHandler(0),
       piPodNameHandler(0),
       pItemCountHandler(0),
       pItemNameHandler(0),

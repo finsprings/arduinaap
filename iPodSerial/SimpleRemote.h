@@ -34,6 +34,8 @@
 class SimpleRemote : public iPodSerial
 {
 public:
+    SimpleRemote(HardwareSerial &serial);
+
     /**
      * Send this command when the user lets go of a button.
      * So, for example, if you want to simulate the user pressing
