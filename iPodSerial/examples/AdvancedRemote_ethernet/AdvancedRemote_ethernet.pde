@@ -94,11 +94,28 @@ void currentPlaylistSongCountHandler(unsigned long count)
   c.println("}");
 }
 
-void pollingHandler(unsigned long elapsedTimeMs)
+void pollingHandler(AdvancedRemote::PollingCommand command,
+                    unsigned long playlistPositionOrelapsedTimeMs)
 {
   c.print("{\"poll\": ");
-  c.print(elapsedTimeMs, DEC);
-  c.println("}");
+
+  switch (command)
+  {
+  case AdvancedRemote::POLLING_TRACK_CHANGE:
+      c.print("{\"track-change-to\": ");
+      break;
+
+  case AdvancedRemote::POLLING_ELAPSED_TIME:
+      c.print("{\"elapsed-time\": ");
+      break;
+
+  default:
+      c.print("{\"unknown\": ");
+      break;
+  }
+
+  c.print(playlistPositionOrelapsedTimeMs, DEC);
+  c.println("}}");
 }
 
 void playlistPositionHandler(unsigned long index)
