@@ -333,7 +333,7 @@ void iPodSerial::sendBytes(size_t length, const byte *pData)
 
 void iPodSerial::sendByte(byte b)
 {
-    pSerial->print(b, BYTE);
+    pSerial->write(b);
     checksum += b;
 
 #if defined(IPOD_SERIAL_DEBUG)

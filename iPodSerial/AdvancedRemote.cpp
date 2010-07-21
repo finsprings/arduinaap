@@ -359,7 +359,7 @@ void AdvancedRemote::processData()
     switch (commandThisIsAResponseFor)
     {
     case CMD_GET_IPOD_NAME:
-        if (piPodNameHandler)   
+        if (piPodNameHandler)
         {
             piPodNameHandler((const char *) pData);
         }
@@ -425,9 +425,9 @@ void AdvancedRemote::processData()
     case CMD_POLLING_MODE:
         if (pPollingHandler)
         {
-            const byte iDontKnowWhatThisIs = *pData; // usually a 4?
-            const unsigned long elapsedTimeMs = endianConvert(pData + 1);
-            pPollingHandler(elapsedTimeMs);
+            const PollingCommand command = (PollingCommand) pData[0];
+            const unsigned long number = endianConvert(pData + 1);
+            pPollingHandler(command, number);
         }
         break;
 

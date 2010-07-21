@@ -54,6 +54,12 @@ public: // enums
         POLLING_STOP = 0x00
     };
 
+    enum PollingCommand
+    {
+        POLLING_TRACK_CHANGE = 0x01,
+        POLLING_ELAPSED_TIME = 0x04
+    };
+
     enum PlaybackControl
     {
         PLAYBACK_CONTROL_PLAY_PAUSE = 0x01,
@@ -120,7 +126,8 @@ public: // handler definitions
     typedef void TitleHandler_t(const char *title);
     typedef void ArtistHandler_t(const char *artist);
     typedef void AlbumHandler_t(const char *album);
-    typedef void PollingHandler_t(unsigned long elapsedTimeMs);
+    typedef void PollingHandler_t(PollingCommand command,
+                                  unsigned long playlistPositionOrelapsedTimeMs);
     typedef void ShuffleModeHandler_t(ShuffleMode mode);
     typedef void RepeatModeHandler_t(RepeatMode mode);
     typedef void CurrentPlaylistSongCountHandler_t(unsigned long count);

@@ -118,10 +118,28 @@ void currentPlaylistSongCountHandler(unsigned long count)
   advancedRemote.jumpToSongInCurrentPlaylist(chosenSongIndexIntoPlaylist);
 }
 
-void pollingHandler(unsigned long elapsedTimeMs)
+void pollingHandler(AdvancedRemote::PollingCommand command,
+                    unsigned long playlistPositionOrelapsedTimeMs)
 {
-  Serial.print("Poll: ");
-  printTime(elapsedTimeMs);
+    Serial.print("Poll: ");
+
+    switch (command)
+    {
+    case AdvancedRemote::POLLING_TRACK_CHANGE:
+        Serial.print("track change to: ");
+        Serial.println(playlistPositionOrelapsedTimeMs, DEC);
+        break;
+
+    case AdvancedRemote::POLLING_ELAPSED_TIME:
+        Serial.print("elapsed time: ");
+        printTime(playlistPositionOrelapsedTimeMs);
+        break;
+
+    default:
+        Serial.print("unknown: ");
+        Serial.println(playlistPositionOrelapsedTimeMs, DEC);
+        break;
+    }
 }
 
 void printTime(const unsigned long ms)
