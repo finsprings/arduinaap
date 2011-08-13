@@ -32,6 +32,10 @@
  */
 #define ARRAY_LEN(array) (sizeof(array) / sizeof(array[0]))
 
+// Uncomment the line below if you want to be able to use
+// setLogPrint and setDebugPrint
+//#define IPOD_SERIAL_DEBUG
+
 class iPodSerial
 {
 public:
