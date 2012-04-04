@@ -149,7 +149,11 @@ void iPodSerial::processResponse()
 
         if (isprint(b))
         {
-            pDebugPrint->print(b, BYTE);
+#if defined(ARDUINO) && ARDUINO >= 100
+            pDebugPrint->write(b);
+#else
+			pDebugPrint->print(b, BYTE);
+#endif
         }
         pDebugPrint->println();
     }

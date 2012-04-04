@@ -25,7 +25,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-#include <WProgram.h>
 #include "iPodSerial.h"
 
 /**

@@ -25,7 +25,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-#include <WProgram.h>
+#if defined(ARDUINO) && ARDUINO >= 100
+#include "Arduino.h"
+#else
+#include "WProgram.h"
+#endif
 
 /**
  * Helper macro for figuring out the length of command byte arrays.
