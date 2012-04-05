@@ -66,7 +66,7 @@ void iPodSerial::setLogPrint(Print &newPrint)
 
     if (pDebugPrint)
     {
-        pDebugPrint->println("Debug Print now set");
+        pDebugPrint->println("Log Print now set");
     }
 }
 #endif
