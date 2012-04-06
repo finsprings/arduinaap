@@ -66,7 +66,7 @@ void iPodSerial::setLogPrint(Print &newPrint)
 
     if (pDebugPrint)
     {
-        pDebugPrint->println("Debug Print now set");
+        pDebugPrint->println("Log Print now set");
     }
 }
 #endif
@@ -149,7 +149,11 @@ void iPodSerial::processResponse()
 
         if (isprint(b))
         {
+#if defined(ARDUINO) && ARDUINO >= 100
+            pDebugPrint->write(b);
+#else
             pDebugPrint->print(b, BYTE);
+#endif
         }
         pDebugPrint->println();
     }

@@ -25,12 +25,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-#include <WProgram.h>
+#if defined(ARDUINO) && ARDUINO >= 100
+#include "Arduino.h"
+#else
+#include "WProgram.h"
+#endif
 
 /**
  * Helper macro for figuring out the length of command byte arrays.
  */
 #define ARRAY_LEN(array) (sizeof(array) / sizeof(array[0]))
+
+// Uncomment the line below if you want to be able to use
+// setLogPrint and setDebugPrint
+//#define IPOD_SERIAL_DEBUG
 
 class iPodSerial
 {

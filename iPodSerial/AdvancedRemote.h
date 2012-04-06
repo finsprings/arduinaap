@@ -25,7 +25,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-#include <WProgram.h>
 #include "iPodSerial.h"
 
 class AdvancedRemote : public iPodSerial
@@ -198,10 +197,7 @@ public: // methods
      * Get the total number of items of the specified type.
      * The response will be sent to the ItemCountHandler, if one
      * has been registered (otherwise it will be ignored).
-     * The value returned is in the context of the currently
-     * selected playlist (except when you're asking for the count
-     * of playlists, obviously).
-     * The count returned is in the context of the mostly-recently
+     * The count returned is in the context of the most-recently
      * selected playlist (via switchToItem). The playlist doesn't
      * have to also have been executeSwitch()'d to however.
      */
@@ -210,7 +206,7 @@ public: // methods
     /**
      * Get the names of a range of items.
      * offset is the starting item (starts at 0, not 1)
-     * The offset is in the context of the mostly-recently
+     * The offset is in the context of the most-recently
      * selected playlist (via switchToItem). The playlist doesn't
      * have to also have been executeSwitch()'d to however.
      */
@@ -228,7 +224,7 @@ public: // methods
      * The response will be sent to the PlaylistPositionHandler, if one
      * has been registered (otherwise it will be ignored).
      * The current playlist is the one last selected via executeSwitch
-     * or via the iPod's controls - call switchToItem for a playlist is
+     * or via the iPod's controls - calling switchToItem for a playlist is
      * not enough.
      */
     void getPlaylistPosition();
@@ -237,7 +233,7 @@ public: // methods
      * ask the iPod for the title of a track.
      * The response will be sent to the TitleHandler, if one
      * has been registered (otherwise it will be ignored).
-     * The count returned is in the context of the mostly-recently
+     * The index is in the context of the most-recently
      * selected playlist (via switchToItem). The playlist doesn't
      * have to also have been executeSwitch()'d to however.
      */
@@ -247,7 +243,7 @@ public: // methods
      * ask the iPod for the artist for a track.
      * The response will be sent to the ArtistHandler, if one
      * has been registered (otherwise it will be ignored).
-     * The count returned is in the context of the mostly-recently
+     * The index is in the context of the most-recently
      * selected playlist (via switchToItem). The playlist doesn't
      * have to also have been executeSwitch()'d to however.
      */
@@ -257,7 +253,7 @@ public: // methods
      * ask the iPod for the album for a track.
      * The response will be sent to the AlbumHandler, if one
      * has been registered (otherwise it will be ignored).
-     * The count returned is in the context of the mostly-recently
+     * The index is in the context of the most-recently
      * selected playlist (via switchToItem). The playlist doesn't
      * have to also have been executeSwitch()'d to however.
      */
@@ -265,14 +261,15 @@ public: // methods
 
     /**
      * Start or stop polling mode.
-     * Polling mode causes the iPod to return the time elapsed every 500 milliseconds.
+     * Polling mode causes the iPod to return the track elapsed time every 500 milliseconds.
+     * A polling notification will also be sent when a track begins.
      * These responses will be sent to the PollingHandler, if one
      * has been registered (otherwise they will be ignored).
      */
     void setPollingMode(PollingMode newMode);
 
     /**
-     * Execute Playlist-switch specified in last setItem call, and jump to specified number
+     * Execute playlist-switch specified in last setItem call, and jump to specified number
      * in the playlist (0xFFFFFFFF means start at the beginning of the playlist, even when
      * shuffled). After this call getSongCountInCurrentPlaylist(), getPlaylistPosition()
      * and jumpToSongInCurrentPlaylist() will be in the context of this newly-switched-to
@@ -314,7 +311,7 @@ public: // methods
      * The response will be sent to the CurrentPlaylistSongCountHandler, if one
      * has been registered (otherwise it will be ignored).
      * The current playlist is the one last selected via executeSwitch
-     * or via the iPod's controls - call switchToItem for a playlist is
+     * or via the iPod's controls - calling switchToItem for a playlist is
      * not enough.
      */
     void getSongCountInCurrentPlaylist();
@@ -322,14 +319,14 @@ public: // methods
     /**
      * Jump to the specified song in the current playlist.
      * The current playlist is the one last selected via executeSwitch
-     * or via the iPod's controls - call switchToItem for a playlist is
+     * or via the iPod's controls - calling switchToItem for a playlist is
      * not enough.
      */
     void jumpToSongInCurrentPlaylist(unsigned long index);
 
     /**
      * returns true if advanced mode is enabled, false otherwise.
-     * Will be fooled if you put the iPod in advanced mode without called enable()
+     * Will be fooled if you put the iPod in advanced mode without calling enable()
      */
     bool isCurrentlyEnabled();
 
