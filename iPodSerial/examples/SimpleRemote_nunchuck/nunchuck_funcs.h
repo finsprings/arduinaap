@@ -10,7 +10,7 @@
  *   http://www.windmeadow.com/node/42
  */
 
-#include <WProgram.h>
+#include <Wire.h>
 
 static uint8_t nunchuck_buf[6];   // array to store nunchuck data,
 
@@ -31,8 +31,8 @@ static void nunchuck_init()
 { 
     Wire.begin();                // join i2c bus as master
     Wire.beginTransmission(0x52);// transmit to device 0x52
-    Wire.send(0x40);// sends memory address
-    Wire.send(0x00);// sends sent a zero.  
+    Wire.write(0x40);// sends memory address
+    Wire.write(0x00);// sends sent a zero.  
     Wire.endTransmission();// stop transmitting
 }
 
@@ -41,7 +41,7 @@ static void nunchuck_init()
 static void nunchuck_send_request()
 {
     Wire.beginTransmission(0x52);// transmit to device 0x52
-    Wire.send(0x00);// sends one byte
+    Wire.write(0x00);// sends one byte
     Wire.endTransmission();// stop transmitting
 }
 
@@ -61,7 +61,7 @@ static int nunchuck_get_data()
     Wire.requestFrom (0x52, 6);// request data from nunchuck
     while (Wire.available ()) {
         // receive byte as an integer
-        nunchuck_buf[cnt] = nunchuk_decode_byte(Wire.receive());
+        nunchuck_buf[cnt] = nunchuk_decode_byte(Wire.read());
         cnt++;
     }
     nunchuck_send_request();  // send request for next data payload
