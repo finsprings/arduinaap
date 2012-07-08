@@ -48,7 +48,7 @@ iPodSerial::iPodSerial()
 {
 }
 
-void iPodSerial::setSerial(HardwareSerial &newiPodSerial)
+void iPodSerial::setSerial(Stream &newiPodSerial)
 {
     pSerial = &newiPodSerial;
 }
@@ -70,11 +70,6 @@ void iPodSerial::setLogPrint(Print &newPrint)
     }
 }
 #endif
-
-void iPodSerial::setup()
-{
-    pSerial->begin(IPOD_SERIAL_RATE);
-}
 
 bool iPodSerial::validChecksum(byte actual)
 {

@@ -51,7 +51,7 @@ void setup()
 {
   nunchuck_setpowerpins();
   nunchuck_init();
-  sr.setup();
+  Serial.begin(iPodSerial::IPOD_SERIAL_RATE);
 }
 
 void loop()

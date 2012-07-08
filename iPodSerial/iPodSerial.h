@@ -42,6 +42,9 @@
 
 class iPodSerial
 {
+public: // attributes
+    static const int IPOD_SERIAL_RATE = 19200;
+
 public:
     iPodSerial();
 
@@ -68,7 +71,7 @@ public:
      * Sets the serial port that the library will use to communicate with the iPod.
      * This defaults to "Serial", i.e. the normal serial port.
      */
-    void setSerial(HardwareSerial &newiPodSerial);
+    void setSerial(Stream &newiPodSerial);
 
 #if defined(IPOD_SERIAL_DEBUG)
     /**
@@ -145,8 +148,6 @@ private: // attributes
     static const byte HEADER1 = 0xFF;
     static const byte HEADER2 = 0x55;
 
-    static const int IPOD_SERIAL_RATE = 19200;
-
     enum ReceiveState
     {
         WAITING_FOR_HEADER1 = 0,
@@ -159,7 +160,7 @@ private: // attributes
     byte *pData;
     byte checksum;
 
-    HardwareSerial *pSerial;
+    Stream *pSerial;
 
 private: // methods
     void sendHeader();

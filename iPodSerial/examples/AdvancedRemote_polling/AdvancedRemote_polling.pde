@@ -171,6 +171,7 @@ void setup()
   //advancedRemote.setDebugPrint(Serial);
 
   // use Serial3 (Mega-only) to talk to the iPod
+  Serial3.begin(iPodSerial::IPOD_SERIAL_RATE);
   advancedRemote.setSerial(Serial3);
 
   // register callback functions for the things we're going to read
@@ -180,9 +181,6 @@ void setup()
   advancedRemote.setAlbumHandler(albumHandler);
   advancedRemote.setPollingHandler(pollingHandler);
   advancedRemote.setCurrentPlaylistSongCountHandler(currentPlaylistSongCountHandler);
-
-  // let the library set itself up, now we've done our configuration of it
-  advancedRemote.setup();
 
   // start in simple remote mode
   advancedRemote.disable();

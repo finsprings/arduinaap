@@ -392,8 +392,7 @@ void setup()
    ar.setDebugPrint(clientPrint);
    */
 
-  // let the library set itself up, now we've done our configuration of it
-  ar.setup();
+  Serial.begin(iPodSerial::IPOD_SERIAL_RATE);
 
   // start in simple remote mode
   ar.disable();

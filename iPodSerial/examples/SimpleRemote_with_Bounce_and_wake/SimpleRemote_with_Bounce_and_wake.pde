@@ -20,7 +20,7 @@ void setup()
   // enable pull-up
   digitalWrite(BUTTON_PIN, HIGH);
 
-  simpleRemote.setup();
+  Serial.begin(iPodSerial::IPOD_SERIAL_RATE);
 }
 
 void loop()
