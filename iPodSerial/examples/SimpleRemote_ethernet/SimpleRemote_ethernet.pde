@@ -1,6 +1,7 @@
 // Example of Simple Remote that exposes an ethernet command interface.
 // Look at the clientLoop() function to see what it understands.
 
+#include <SPI.h>
 #include <Ethernet.h>
 #include <SimpleRemote.h>
 
@@ -13,8 +14,8 @@ byte IP_ADDRESS[] = {
 
 // Don't use 23 or telnet client will tend to do telnet negotiation (WILL/WONT/DO/DONT etc)
 byte PORT = 80;
-Server server = Server(PORT);
-Client c(255);
+EthernetServer server = EthernetServer(PORT);
+EthernetClient c(255);
 
 char buffer[32];
 int len = 0;
@@ -191,7 +192,7 @@ void loop()
   else
   {
     // look for a new network client
-    Client newClient = server.available();
+    EthernetClient newClient = server.available();
     if (newClient)
     {
       if (c)
