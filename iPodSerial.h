@@ -49,15 +49,6 @@ public:
     iPodSerial();
 
     /**
-     * Initializes the library.
-     * This method must be called in your sketch's setup() function.
-     * You should *not* call begin on the serial port that your
-     * iPod is connected to: the library will do that here since it
-     * knows what baud rate it wants to talk at.
-     */
-    void setup();
-
-    /**
      * Checks for data coming in from the iPod and processes it if there is any.
      * The library handles partial messages coming in from the iPod so it
      * will buffer those chunks until it gets a complete message. Once a complete
