@@ -1,0 +1,10 @@
+{
+  "name": "Arduino-AAP",
+  "keywords": "aap, apple, iphone, ipod, protocol",
+  "description": "An Arduino library for controlling iPods (and some features for the iPod app on iPhones and iPod Touches) via the Apple Accessory Protocol (AAP)",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/finsprings/arduinaap.git"
+  }
+}
