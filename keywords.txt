@@ -6,8 +6,8 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-SimpleRemote	 KEYWORD1
-AdvancedRemote	 KEYWORD1
+SimpleRemote	KEYWORD1
+AdvancedRemote	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
